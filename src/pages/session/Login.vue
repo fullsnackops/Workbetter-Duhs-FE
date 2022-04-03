@@ -36,7 +36,9 @@ export default {
     },
     methods: {
         googleCallback() {
-            this.$store.dispatch('signinUser')
+            this.$authenticator.googleSignIn()
+            this.$store.commit('doRedirect', true)
+            this.$store.commit('onLoginError', null)
         },
     },
     computed: {

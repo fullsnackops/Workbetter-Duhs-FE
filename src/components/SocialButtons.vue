@@ -31,6 +31,12 @@ export default {
             this.googleCallback && this.googleCallback()
         },
     },
+    mounted() {
+        this.$nextTick(async function() {
+            await this.$authenticator.googleInitPromise
+            this.googleEnabled = true
+        })
+    },
 }
 </script>
 

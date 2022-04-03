@@ -27,6 +27,7 @@
 <script>
 import SocialButtons from '@/components/SocialButtons'
 import AppConfig from '@/constants/AppConfig'
+import { mapGetters } from 'vuex'
 
 export default {
     components: {
@@ -44,7 +45,46 @@ export default {
     },
     methods: {
         googleCallback() {
-            this.$store.dispatch('signinUser')
+            this.$authenticator
+                .googleGrantOffline('profile https://www.googleapis.com/auth/calendar.readonly')
+                .then(({ code }) => {
+                    this.$store.dispatch('signupUser', code)
+                    this.step = 2
+                    this.$store.dispatch('calendarIntegration', {
+                        provider: 'Google',
+                        authorization: 'success',
+                    })
+                })
+                .catch(e => {
+                    this.$store.dispatch('calendarIntegration', {
+                        provider: 'Google',
+                        authorization: 'denied',
+                    })
+                })
+            this.$store.commit('doRedirect', true)
+            this.$store.commit('onLoginError', null)
+            this.$store.dispatch('signUpInitiated', 'Google')
+        },
+        computed: {
+            ...mapGetters({
+                signupResult: 'signupResult',
+                importResult: 'importResult',
+                user: 'user',
+            }),
+        },
+        watch: {
+            signupResult(res) {
+                this.step = res ? 3 : 1
+                this.$store.dispatch('signUpCompleted')
+            },
+            importResult(res) {
+                this.step = res ? 4 : 1
+            },
+            user(user) {
+                if (this.step === 3) {
+                    this.$store.dispatch('importEvents')
+                }
+            },
         },
     },
 }
