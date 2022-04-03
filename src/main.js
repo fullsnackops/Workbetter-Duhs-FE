@@ -39,19 +39,22 @@ import './lib/WorkbetterDuhsCss'
 // messages
 import messages from './lang'
 
+// session
+import * as authenticator from '@/helpers/authenticator'
+Object.defineProperty(Vue.prototype, '$authenticator', { value: authenticator })
+
 // navigation guards before each
 router.beforeEach(async (to, from, next) => {
     Nprogress.start()
-    if (to.matched.some(record => record.meta.requiresAuth)) {
+    const loginRes = await authenticator.isLoggedIn()
+    if (to.matched.some(record => record.meta.requiresAuth) && !loginRes) {
         // this route requires auth, check if logged in
         // if not, redirect to login page.
-        if (store.getters.getUser === null) {
-            Nprogress.done()
-            next({
-                path: '/session/login',
-                query: { redirect: to.fullPath },
-            })
-        }
+        Nprogress.done()
+        return next({
+            path: '/session/login',
+            query: { redirect: to.fullPath },
+        })
     }
 
     next() // make sure to always call next()!
