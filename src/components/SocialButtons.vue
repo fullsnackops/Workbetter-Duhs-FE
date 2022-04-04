@@ -5,6 +5,7 @@
                 src="/static/img/btn_google_signin.png"
                 srcset="/static/img/btn_google_signin.png 1x, /static/img/btn_google_signin@2x.png 2x"
                 @click="google()"
+                v-if="googleEnabled"
                 :contain="true"
                 position="center"
                 max-height="42"
