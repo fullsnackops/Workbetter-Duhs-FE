@@ -1,16 +1,14 @@
 <template>
     <v-layout row wrap mx-auto class="login-button-container">
-        <v-flex xs12 mx-auto my-2>
-            <v-img
-                src="/static/img/btn_google_signin.png"
-                srcset="/static/img/btn_google_signin.png 1x, /static/img/btn_google_signin@2x.png 2x"
-                @click="google()"
-                v-if="googleEnabled"
-                :contain="true"
-                position="center"
-                max-height="42"
-            />
-        </v-flex>
+        <v-img
+            src="/static/img/btn_google_signin.png"
+            srcset="/static/img/btn_google_signin.png 1x, /static/img/btn_google_signin@2x.png 2x"
+            @click="google()"
+            v-if="googleEnabled"
+            :contain="true"
+            position="center"
+            max-height="42"
+        />
     </v-layout>
 </template>
 
