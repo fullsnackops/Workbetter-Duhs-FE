@@ -60,26 +60,26 @@ export default {
             this.$store.commit('onLoginError', null)
             this.$store.dispatch('signUpInitiated', 'Google')
         },
-        computed: {
-            ...mapGetters({
-                signupResult: 'signupResult',
-                importResult: 'importResult',
-                user: 'user',
-            }),
+    },
+    computed: {
+        ...mapGetters({
+            signupResult: 'signupResult',
+            importResult: 'importResult',
+            user: 'user',
+        }),
+    },
+    watch: {
+        signupResult(res) {
+            this.step = res ? 3 : 1
+            this.$store.dispatch('signUpCompleted')
         },
-        watch: {
-            signupResult(res) {
-                this.step = res ? 3 : 1
-                this.$store.dispatch('signUpCompleted')
-            },
-            importResult(res) {
-                this.step = res ? 4 : 1
-            },
-            user(user) {
-                if (this.step === 3) {
-                    this.$store.dispatch('importEvents')
-                }
-            },
+        importResult(res) {
+            this.step = res ? 4 : 1
+        },
+        user(user) {
+            if (this.step === 3) {
+                this.$store.dispatch('importEvents')
+            }
         },
     },
 }
