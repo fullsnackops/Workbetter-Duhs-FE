@@ -1,28 +1,27 @@
 <template>
-    <v-layout align-start justify-center fill-height class="session-container">
-        <v-flex md6 text-center>
-            <v-flex xs12 sm6 offset-sm3>
-                <img :src="appLogo" class="img-responsive mb-3" />
-            </v-flex>
-            <h3 class="my-3">{{ $t('message.loginToDashboard') }}</h3>
-            <social-buttons v-bind="{ googleCallback }" />
-            <p class="fs-14 my-3">
-                {{ $t('message.dontHaveAccount') }}
-                <router-link to="/session/sign-up">
-                    <h5 class="signup">{{ $t('message.clickHere') }}</h5>
-                </router-link>
-                {{ $t('message.toCreateOne') }}
-            </p>
-            <p class="fs-14 my-3" v-if="loginError && loginError.code === 'UserNotFoundException'">
-                {{ $t('message.userNotFound') }}
-            </p>
+    <div>
+        <v-flex xs12 sm6 offset-sm3>
+            <img :src="appLogo" class="img-responsive mb-3" />
         </v-flex>
-    </v-layout>
+        <h3 class="my-3">{{ $t('message.loginToDashboard') }}</h3>
+        <social-buttons v-bind="{ googleCallback }" />
+        <p class="fs-14 my-3">
+            {{ $t('message.dontHaveAccount') }}
+            <router-link to="/session/sign-up">
+                <h5 class="signup">{{ $t('message.clickHere') }}</h5>
+            </router-link>
+            {{ $t('message.toCreateOne') }}
+        </p>
+        <p class="fs-14 my-3" v-if="loginError && loginError.code === 'UserNotFoundException'">
+            {{ $t('message.userNotFound') }}
+        </p>
+    </div>
 </template>
 
 <script>
 import AppConfig from '@/constants/AppConfig'
 import SocialButtons from '@/components/SocialButtons'
+import { mapGetters } from 'vuex'
 
 export default {
     components: {
@@ -42,19 +41,12 @@ export default {
         },
     },
     computed: {
-        loginError() {
-            return this.$store.getters.loginError
-        },
+        ...mapGetters(['loginError']),
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.session-container {
-    padding-top: 10%;
-    background: url('/static/img/signup-bg.png') center/cover no-repeat;
-    color: #fff;
-}
 .signup {
     color: pink;
 }

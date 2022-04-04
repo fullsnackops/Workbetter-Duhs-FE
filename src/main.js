@@ -8,6 +8,7 @@ import '@/helpers/progress'
 import '@fortawesome/fontawesome-free/css/all.css'
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import { VueExtendLayout, layout } from 'vue-extend-layout'
 import VueBreadcrumbs from 'vue2-breadcrumbs'
 import VueNotifications from 'vue-notifications'
 import miniToastr from 'mini-toastr'
@@ -20,9 +21,6 @@ import $ from 'jquery'
 
 // global components
 import GlobalComponents from './globalComponents'
-
-// app.vue
-import App from './App'
 
 // router
 import router from './router'
@@ -98,6 +96,7 @@ Vue.use(VueI18n)
 Vue.use(VModal)
 Vue.use(VueTour)
 Vue.use(VueBreadcrumbs)
+Vue.use(VueExtendLayout)
 Vue.use(VueNotifications, options)
 Vue.use(fullscreen)
 Vue.use(GlobalComponents)
@@ -114,6 +113,5 @@ new Vue({
     el: '#app',
     i18n,
     router,
-    template: '<App/>',
-    components: { App },
+    ...layout,
 })
