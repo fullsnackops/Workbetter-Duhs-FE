@@ -11,6 +11,7 @@ export default {
     clickHere: 'Click here',
     toCreateOne: 'to create one.',
     pageNotFound: 'Page Not Found',
+    backToWork: 'Back to Work',
     analytics: 'Analytics',
     analyticsmeeting: 'Analytics Meeting',
     userProfile: 'User Profile',
