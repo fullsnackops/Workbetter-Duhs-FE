@@ -1,4 +1,4 @@
-# reports
+# Front-End
 
 > Workbetter-Duhs Module
 
