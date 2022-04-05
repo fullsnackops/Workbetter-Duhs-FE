@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import auth from './modules/auth'
 import settings from './modules/settings'
 import sidebar from './modules/sidebar'
+import api from './modules/api'
 import stats from './modules/stats'
 
 // plugins
@@ -21,6 +22,7 @@ export const store = new Vuex.Store({
         sidebar,
         settings,
         stats,
+        api,
     },
     strict: debug,
     plugins: debug ? plugins.concat([createLogger()]) : plugins,
