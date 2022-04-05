@@ -9,7 +9,7 @@ const prod = {
 
 const dev = {
   googleApiKey: 'AIzaSyCQTCwatk156bD6LP5F117aqJvwztnulzE',
-  googleClientId: '451062396599-clsahums0vsguem3b3i737840g52mp2l.apps.googleusercontent.com',
+  googleClientId: '451062396599-30bfeuspln7i19c1ckgf2sf9uv93s44i.apps.googleusercontent.com',
   baseURI: '',
   UserPoolId: 'us-east-1_vpsErMsv1',
   UserPoolAppClientId: '3kluub58bs92ugid89elhp1u1s',
