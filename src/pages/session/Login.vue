@@ -12,7 +12,10 @@
             </router-link>
             {{ $t('message.toCreateOne') }}
         </p>
-        <p class="fs-14 my-3" v-if="loginError && loginError.code === 'UserNotFoundException'">
+        <p class="fs-14 my-3" v-if="loginError && loginError === 'UserNotFoundException'">
+            {{ $t('message.userNotFound') }}
+        </p>
+        <p class="fs-14 my-3" v-if="loginError && loginError === 'Incorrect email or password'">
             {{ $t('message.userNotFound') }}
         </p>
     </div>
