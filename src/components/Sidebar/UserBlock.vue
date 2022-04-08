@@ -1,10 +1,12 @@
 <template>
     <v-list-tile class="sidebar-profile">
         <v-list-tile-avatar>
-            <img src="/static/avatars/user.jpg" alt="avatar" height="40" width="40" class="img-responsive" />
+            <img :src="user.picture" alt="avatar" height="40" width="40" class="img-responsive" />
         </v-list-tile-avatar>
         <v-list-tile-content class="ml-3">
-            <v-list-tile-title><span>David Ulevitch</span></v-list-tile-title>
+            <v-list-tile-title>
+                <span>{{ user.name }}</span>
+            </v-list-tile-title>
         </v-list-tile-content>
         <v-menu
             bottom
@@ -20,8 +22,8 @@
             </v-btn>
             <div class="dropdown-content">
                 <div class="dropdown-top white--text primary">
-                    <span class="white--text fs-14 fw-bold d-block">David Ulevitch</span>
-                    <span class="d-block fs-12 fw-light">info@example.com</span>
+                    <span class="white--text fs-14 fw-bold d-block">{{ user.name }}</span>
+                    <span class="d-block fs-12 fw-light">{{ user.email }}</span>
                 </div>
                 <v-list class="dropdown-list">
                     <v-list-tile to="/users/user-profile">
@@ -39,11 +41,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     methods: {
         logoutUser() {
             this.$store.dispatch('logoutUser')
         },
+    },
+    computed: {
+        ...mapGetters(['user']),
     },
 }
 </script>
