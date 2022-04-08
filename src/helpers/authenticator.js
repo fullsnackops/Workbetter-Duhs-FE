@@ -96,10 +96,6 @@ const signUp = async code => {
 }
 
 const signOut = async () => {
-    if (cognitoUser) {
-        cognitoUser.signOut()
-        cognitoUser = null
-    }
     await googleInitPromise
     await gapi.auth2.getAuthInstance().signOut()
 }
