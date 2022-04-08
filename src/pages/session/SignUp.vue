@@ -14,10 +14,15 @@
             </p>
         </template>
         <template v-else-if="step === 2">
-            registering
+            <p class="fs-16">
+                {{ $t('message.registering') }}
+            </p>
+            <v-progress-circular indeterminate color="white"></v-progress-circular>
         </template>
         <template v-else-if="step === 3">
-            importing events
+            <p class="fs-16">
+                {{ $t('message.importingevents') }}
+            </p>
         </template>
     </div>
 </template>
