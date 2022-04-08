@@ -16,7 +16,6 @@
     "format": "prettier --write 'src/**/*.{vue,js,jsx,scss,less}'"
   },
   "dependencies": {
-    "amazon-cognito-identity-js": "^2.0.21",
     "amplitude-js": "^4.4.0",
     "aws-sdk": "^2.301.0",
     "lodash": "^4.17.11",
