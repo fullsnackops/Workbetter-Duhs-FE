@@ -47,7 +47,7 @@ export default [
             page: 'analytics-meeting',
             type: 'meeting',
             breadcrumb: 'Analytics / Meeting',
-            layout: 'preauth',
+            layout: 'default',
         },
     },
 
