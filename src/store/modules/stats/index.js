@@ -65,11 +65,11 @@ const mutations = {
         updateUserProperties(user, props)
     },
     logoutUser(state, user) {
-        amplitude.setUserId(user.username)
+        amplitude.setUserId(user.id)
         event('User Logged Out')
     },
-    onSignupCompleted(state, username) {
-        amplitude.setUserId(username)
+    onSignupCompleted(state, user) {
+        amplitude.setUserId(user.id)
     },
 }
 
