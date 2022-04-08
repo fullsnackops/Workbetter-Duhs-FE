@@ -23,10 +23,15 @@ export async function call(endpoint, params = {}, method = 'GET', token) {
         body,
     }
 
-    const res = await fetch(`${AppConfig.baseURI}${endpoint}?${query}`, opts)
+    const url = query ? `${AppConfig.baseURI}${endpoint}?${query}` : `${AppConfig.baseURI}${endpoint}`
+    const res = await fetch(url, opts)
     const json = await res.json()
-    if (res.status >= 400 || (json && (json.errorType >= 400 || json.errorMessage))) {
-        throw json.message || json.errorMessage || res.statusText
+    if (res.status >= 400) {
+        if (json && (json.errors && json.errors.length)) {
+            throw json.errors[0].message
+        } else {
+            throw json.message
+        }
     }
     return json
 }
