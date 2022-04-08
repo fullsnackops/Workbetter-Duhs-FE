@@ -20,10 +20,10 @@ subscribe((err, session) => {
     if (err) return store.commit('onLoginError', err)
     store.commit('onSessionUpdate', session)
     store.commit('doRedirect', false)
-    const { user } = session || {}
-    if (user && !store.getters.userProps) {
-        store.dispatch('loadUserProps')
-    }
+    // const { user } = session || {}
+    // if (user && !store.getters.userProps) {
+    //     store.dispatch('loadUserProps')
+    // }
 })
 
 // getters
@@ -53,8 +53,9 @@ const actions = {
     async signupUser(context, code) {
         Nprogress.start()
         try {
-            const username = await signUp(code)
-            context.commit('onSignupCompleted', username)
+            const { user, token } = await signUp(code)
+            store.commit('onSessionUpdate', { user, token })
+            context.commit('onSignupCompleted', user)
             context.commit('writeAccessRequired', false)
             context.commit('onLoginError', null)
         } catch (e) {
@@ -99,7 +100,7 @@ const mutations = {
             IntercomPromise.then(() =>
                 window.Intercom('update', {
                     email: state.user.email,
-                    user_id: state.user.username,
+                    user_id: state.user.id,
                     name: state.user.name,
                 })
             )
@@ -107,8 +108,8 @@ const mutations = {
         Nprogress.doneAll()
         state.doRedirect && router.push(router.currentRoute.query.redirect || '/')
     },
-    onSignupCompleted(state, username) {
-        state.signupResult = !!username
+    onSignupCompleted(state, user) {
+        state.signupResult = !!user
     },
     writeAccessRequired(state, val) {
         state.writeAccessRequired = !!val
