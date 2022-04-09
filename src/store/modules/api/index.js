@@ -44,7 +44,7 @@ const actions = {
             ustate('import', 1)
             Nprogress.start()
             const res = await call('/calendar/import')
-            context.commit('onImportCompleted', !!(res && !res.errorType))
+            context.commit('onImportCompleted', !!(res && !res.errors))
             ustate('import', 2)
         } catch (e) {
             VueNotifications.error({
