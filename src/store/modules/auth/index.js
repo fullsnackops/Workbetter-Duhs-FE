@@ -10,6 +10,7 @@ import { subscribe, signOut, signUp } from '@/helpers/authenticator'
 const state = {
     user: null,
     token: null,
+    signupStarted: null,
     signupResult: null,
     writeAccessRequired: false,
     loginError: null,
@@ -34,6 +35,9 @@ const getters = {
     token: state => {
         return state.token
     },
+    signupStarted: state => {
+        return state.signupStarted
+    },
     signupResult: state => {
         return state.signupResult
     },
@@ -53,6 +57,7 @@ const actions = {
     async signupUser(context, code) {
         Nprogress.start()
         try {
+            context.commit('onSignupStarted', code)
             const { user, token } = await signUp(code)
             store.commit('onSessionUpdate', { user, token })
             context.commit('onSignupCompleted', user)
@@ -108,7 +113,11 @@ const mutations = {
         Nprogress.doneAll()
         state.doRedirect && router.push(router.currentRoute.query.redirect || '/')
     },
+    onSignupStarted(state, code) {
+        state.signupStarted = !!code
+    },
     onSignupCompleted(state, user) {
+        state.signupStarted = false
         state.signupResult = !!user
     },
     writeAccessRequired(state, val) {
