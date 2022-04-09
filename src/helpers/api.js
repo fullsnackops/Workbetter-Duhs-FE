@@ -16,7 +16,7 @@ export async function call(endpoint, params = {}, method = 'GET', token) {
 
     const opts = {
         headers: new Headers({
-            Authorization: token || store.getters.token,
+            Authorization: 'Bearer ' + (token || store.getters.token),
             'content-type': 'application/json',
         }),
         method,
