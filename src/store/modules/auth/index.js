@@ -93,7 +93,7 @@ const mutations = {
     },
     onSessionUpdate(state, session) {
         if (!session) return
-        state.token = session.token
+        state.token = session.token.accessToken
         state.user = session.user
         const { IntercomPromise } = window
         if (IntercomPromise) {
