@@ -1,6 +1,7 @@
 /* eslint no-undef: 0 */
 import AppConfig from '@/constants/AppConfig'
 import { call } from '@/helpers/api'
+import { store } from '../store/store'
 
 let signupPromise = Promise.resolve()
 let loginPromise = Promise.resolve()
@@ -19,11 +20,10 @@ async function onGoogleUserChange(user) {
     loginPromise = loginPromise.then(
         () =>
             new Promise(async resolve => {
-                if (!user || !user.isSignedIn()) {
+                if (!user || !user.isSignedIn() || store.getters.signupStarted) {
                     notify(null, null)
                     return resolve()
                 }
-
                 // const { id_token } = user.getAuthResponse()
                 const profile = user.getBasicProfile()
                 const email = profile.getEmail()
