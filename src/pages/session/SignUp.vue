@@ -23,6 +23,7 @@
             <p class="fs-16">
                 {{ $t('message.importingevents') }}
             </p>
+            <v-progress-circular indeterminate color="white"></v-progress-circular>
         </template>
     </div>
 </template>
