@@ -8,7 +8,7 @@ import { store } from '../../store'
 import { subscribe, signOut, signUp } from '@/helpers/authenticator'
 
 const state = {
-    user: null,
+    user: localStorage.getItem('userId'),
     token: null,
     signupStarted: null,
     signupResult: null,
@@ -92,6 +92,7 @@ const actions = {
 // mutations
 const mutations = {
     logoutUser(state) {
+        localStorage.removeItem('userId')
         state.user = null
         state.token = null
         state.signupResult = null
@@ -100,6 +101,7 @@ const mutations = {
         if (!session) return
         state.token = session.token.accessToken
         state.user = session.user
+        localStorage.setItem('userId', JSON.stringify(state.user))
         const { IntercomPromise } = window
         if (IntercomPromise) {
             IntercomPromise.then(() =>
