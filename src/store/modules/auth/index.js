@@ -55,7 +55,6 @@ const getters = {
 // actions
 const actions = {
     async signupUser(context, code) {
-        Nprogress.start()
         try {
             context.commit('onSignupStarted', code)
             const { user, token } = await signUp(code)
@@ -70,7 +69,6 @@ const actions = {
             console.error(e)
             context.commit('onSignupCompleted', false)
         }
-        Nprogress.done()
     },
     async logoutUser(context) {
         Nprogress.start()

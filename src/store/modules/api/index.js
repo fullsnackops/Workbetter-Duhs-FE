@@ -1,7 +1,6 @@
 /**
  * Auth Module
  */
-import Nprogress from 'nprogress'
 import VueNotifications from 'vue-notifications'
 import { call } from '@/helpers/api'
 import router from '@/router'
@@ -42,7 +41,6 @@ const actions = {
             }
 
             ustate('import', 1)
-            Nprogress.start()
             const res = await call('/calendar/import')
             context.commit('onImportCompleted', !!(res && !res.errors))
             ustate('import', 2)
@@ -54,7 +52,6 @@ const actions = {
             context.commit('onImportCompleted', false)
             ustate('import', 0)
         }
-        Nprogress.done()
         router.push('/')
     },
 }
