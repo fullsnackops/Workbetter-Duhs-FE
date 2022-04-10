@@ -70,8 +70,6 @@ const googleInitPromise = new Promise(resolve => {
 const isLoggedIn = async () => {
     try {
         await googleInitPromise
-        // const user = gapi.auth2.getAuthInstance().currentUser.get()
-        // user && user.isSignedIn() ? resolve(1) : resolve(null)
         return await loginPromise
     } catch (e) {
         return null
