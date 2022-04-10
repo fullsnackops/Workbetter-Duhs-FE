@@ -11,7 +11,7 @@ export default {
     clickHere: 'Click here',
     toCreateOne: 'to create one.',
     registering: 'REGISTERING...',
-    importingevents: 'IMPORTING EVENTS',
+    importingevents: 'IMPORTING EVENTS...',
     pageNotFound: 'Page Not Found',
     backToWork: 'Back to Work',
     analytics: 'Analytics',
