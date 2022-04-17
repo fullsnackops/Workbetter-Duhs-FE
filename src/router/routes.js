@@ -2,8 +2,12 @@
 const SignUp = () => import('@/pages/session/SignUp')
 const Login = () => import('@/pages/session/Login')
 
-// Reports Components
-const AnalyticsMeeting = () => import('@/pages/main/AnalyticsMeeting')
+// Weekly Components
+const WeeklyAnalyzer = () => import('@/pages/weekly/Analyzer')
+const WeeklyPlanner = () => import('@/pages/weekly/Analyzer')
+
+// Monthly Components
+const MonthlyAnalyzer = () => import('@/pages/monthly/Analyzer')
 
 // Other
 const NotFound = () => import('@/pages/NotFound')
@@ -12,7 +16,7 @@ export default [
     {
         path: '/',
         name: 'home',
-        redirect: '/main/analytics-meeting',
+        redirect: '/weekly/analyzer',
     },
 
     // Session
@@ -36,17 +40,46 @@ export default [
         },
     },
 
-    // Analytics Meeting
+    // Weekly Dashboards
     {
-        path: '/main/analytics-meeting',
-        name: 'analytics-meeting',
-        component: AnalyticsMeeting,
+        path: '/weekly/analyzer',
+        alias: ['/', '/settings'],
+        name: 'weekly-analyzer',
+        component: WeeklyAnalyzer,
         meta: {
             requiresAuth: true,
-            title: 'message.analyticsmeeting',
-            page: 'analytics-meeting',
-            type: 'meeting',
-            breadcrumb: 'Analytics / Meeting',
+            title: 'message.weeklyAnalyzer',
+            page: 'weekly-analyzer',
+            type: 'weekly-analyzer',
+            breadcrumb: 'W Dashboards / Weekly Analyzer',
+            layout: 'default',
+        },
+    },
+    {
+        path: '/weekly/planner',
+        name: 'weekly-planner',
+        component: WeeklyPlanner,
+        meta: {
+            requiresAuth: true,
+            title: 'message.weeklyPlanner',
+            page: 'weekly-planner',
+            type: 'weekly-planner',
+            breadcrumb: 'W Dashboards / Weekly Planner',
+            layout: 'default',
+        },
+    },
+
+    // Monthly Dashboards
+    {
+        path: '/monthly/analyzer',
+        name: 'monthly-analyzer',
+        component: MonthlyAnalyzer,
+        meta: {
+            requiresAuth: true,
+            title: 'message.monthlyAnalyzer',
+            page: 'monthly-analyzer',
+            type: 'monthly-analyzer',
+            breadcrumb: 'M Dashboards / Monthly Analyzer',
             layout: 'default',
         },
     },
