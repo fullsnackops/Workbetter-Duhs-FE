@@ -56,6 +56,12 @@ const actions = {
             authorization,
         })
     },
+    dateRangeChanged(context, { dashboard, direction }) {
+        event(`Dashboard Date Range Changed`, {
+            dashboard_name: dashboard,
+            change_direction: direction,
+        })
+    },
 }
 
 // mutations

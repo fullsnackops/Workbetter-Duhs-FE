@@ -1,7 +1,7 @@
 export const menus = {
     'message.pages': [
         {
-            action: 'zmdi-chart',
+            action: 'zmdi-calendar',
             title: 'message.weeklyDashboards',
             active: true,
             items: [

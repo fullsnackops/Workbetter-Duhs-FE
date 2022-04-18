@@ -5,7 +5,7 @@ import { languages, sidebarBackgroundImages, sidebarFilters, routerAnimations, t
 
 const state = {
     darkMode: false, // dark mode
-    collapseSidebar: false, // mini sidevar
+    collapseSidebar: true, // mini sidevar
     rtlLayout: false, // rtl layout
     backgroundImage: true, // enable sidebar background image
     horizontalLayoutSidebar: false, // horizontal layout sidebar
@@ -21,6 +21,9 @@ const state = {
     selectedTheme: themes[0], // selected theme
     headerFilters, // header filters
     activeHeaderFilter: headerFilters[1], // selected header filter
+    wanalyzerOffset: -1,
+    wplannerOffset: 0,
+    manalyzerOffset: -1,
 }
 
 // getters
@@ -79,6 +82,15 @@ const getters = {
     horizontalLayoutSidebar: state => {
         return state.horizontalLayoutSidebar
     },
+    wanalyzerOffset: state => {
+        return state.wanalyzerOffset
+    },
+    wplannerOffset: state => {
+        return state.wplannerOffset
+    },
+    manalyzerOffset: state => {
+        return state.manalyzerOffset
+    },
 }
 
 // actions
@@ -121,6 +133,24 @@ const actions = {
     },
     toggleHorizontalLayoutSidebar(context, payload) {
         context.commit('toggleHorizontalLayoutSidebarHandler', payload)
+    },
+    changeWAnalyzerOffset(context, change) {
+        if (!parseInt(change)) return
+        const offset = context.state.wanalyzerOffset + parseInt(change)
+        context.commit('wanalyzerOffset', offset)
+        // context.dispatch('loadWAnalyzer', offset)
+    },
+    changeWPlannerOffset(context, change) {
+        if (!parseInt(change)) return
+        const offset = context.state.wplannerOffset + parseInt(change)
+        context.commit('wplannerOffset', offset)
+        // context.dispatch('loadWPlanner', offset)
+    },
+    changeMAnalyzerOffset(context, change) {
+        if (!parseInt(change)) return
+        const offset = context.state.manalyzerOffset + parseInt(change)
+        context.commit('manalyzerOffset', offset)
+        // context.dispatch('loadMAnalyzer', offset)
     },
 }
 
@@ -169,6 +199,15 @@ const mutations = {
     },
     toggleHorizontalLayoutSidebarHandler(state, value) {
         state.horizontalLayoutSidebar = value
+    },
+    wanalyzerOffset(state, value) {
+        state.wanalyzerOffset = value
+    },
+    wplannerOffset(state, value) {
+        state.wplannerOffset = value
+    },
+    manalyzerOffset(state, value) {
+        state.manalyzerOffset = value
     },
 }
 
