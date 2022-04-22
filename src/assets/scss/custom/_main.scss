@@ -133,7 +133,7 @@
     background: rgba($color: $gray-dark, $alpha: 0.15);
   }
   .dash-bg-block {
-    margin: 20px -24px !important;
+    margin: 0px -24px !important;
     background: repeating-linear-gradient(
       -45deg,
       transparent,
@@ -193,11 +193,6 @@
 .metric-label {
   font-size: 1.15 * $font-size-xs;
   font-weight: $font-weight-semi-bold;
-}
-
-.estimated-const {
-  font-size: 1.55 * $font-size-xxl;
-  font-weight: $font-weight-light;
 }
 
 .stats-chip {
