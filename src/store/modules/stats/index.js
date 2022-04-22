@@ -56,6 +56,12 @@ const actions = {
             authorization,
         })
     },
+    viewDashboard(context, { dashboard, dateRange, origin = 'Unknown' }) {
+        event(`View ${dashboard} Dashboard`, {
+            access_origin: origin,
+            date_range_of_report: dateRange,
+        })
+    },
     dateRangeChanged(context, { dashboard, direction }) {
         event(`Dashboard Date Range Changed`, {
             dashboard_name: dashboard,
