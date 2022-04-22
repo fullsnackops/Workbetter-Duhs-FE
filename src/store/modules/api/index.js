@@ -1,13 +1,18 @@
 /**
  * Auth Module
  */
+import Nprogress from 'nprogress'
 import VueNotifications from 'vue-notifications'
 import { call } from '@/helpers/api'
 import router from '@/router'
 
+// Import recap dummy data
+import { recap } from './recap'
+
 function getFreshState() {
     return {
         importResult: null,
+        recap: recap,
     }
 }
 
@@ -29,6 +34,9 @@ function ustate(key, value) {
 const getters = {
     importResult: state => {
         return state.importResult
+    },
+    recap: state => {
+        return state.recap
     },
 }
 
@@ -53,6 +61,18 @@ const actions = {
             ustate('import', 0)
         }
         router.push('/')
+    },
+    async loadRecap(context, offset) {
+        try {
+            // call get recap api for offset ${offset}
+            // once fetched recap data, call mutation
+            setTimeout(() => {
+                Nprogress.start()
+            }, 1500)
+        } catch (e) {
+            // process error
+        }
+        Nprogress.done()
     },
 }
 
