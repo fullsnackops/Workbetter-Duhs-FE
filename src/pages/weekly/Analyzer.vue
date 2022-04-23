@@ -15,6 +15,13 @@
                         <meeting-stats :statsOption="meetingStatsOption" :stats="meetingStats"></meeting-stats>
                     </skeleton-list>
                 </app-card>
+
+                <!-- Meeting Makeup -->
+                <app-card :heading="$t('message.meetingTypes')" colClasses="xl8 lg8 md6 sm12 xs12">
+                    <skeleton-list :data="recapStatsData" :repeat="5" :enable-animation="true">
+                        <meeting-makeup :stats="meetingMakeup"></meeting-makeup>
+                    </skeleton-list>
+                </app-card>
             </v-layout>
         </v-container>
     </div>
@@ -23,11 +30,13 @@
 <script>
 import moment from 'moment-timezone'
 import MeetingStats from '@/components/Widgets/MeetingStats'
+import MeetingMakeup from '@/components/Widgets/MeetingMakeup'
 
 export default {
     name: 'WeeklyAnalyzer',
     components: {
         MeetingStats,
+        MeetingMakeup,
     },
     data() {
         return {
@@ -52,6 +61,11 @@ export default {
                 week: stats.week,
                 month: stats.month,
             }
+        },
+        meetingMakeup() {
+            const { makeup } = this.$store.getters.recap
+            if (!makeup) return { externalDomains: [], makeup: {}, loading: null }
+            return { ...makeup, loading: { loaded: true } }
         },
     },
     methods: {
