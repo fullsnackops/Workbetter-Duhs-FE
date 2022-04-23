@@ -1,8 +1,11 @@
 <template>
-    <div class="app-card-title" v-if="heading">
-        <h3>{{ heading }}</h3>
+    <div class="app-card-title" :class="[extraClass]" v-if="heading">
+        <h3>
+            {{ heading }}
+        </h3>
+        <slot></slot>
         <template v-if="!withTabs">
-            <div class="app-contextual-link" v-if="fullScreen || reloadable || closeable">
+            <div class="app-contextual-link" v-if="fullScreen || reloadable || feedbackable || closeable">
                 <v-menu transition="scale-transition" origin="right top" bottom left>
                     <v-btn class="ma-0" icon slot="activator">
                         <v-icon>more_vert</v-icon>
@@ -16,6 +19,10 @@
                             <i class="zmdi zmdi-refresh success--text mr-2 fs-14"></i>
                             <span>{{ $t('message.reload') }}</span>
                         </v-list-tile>
+                        <v-list-tile @click="$emit('onFeedback')" v-if="feedbackable">
+                            <i class="zmdi zmdi-thumb-up-down mr-2 warning--text fs-14"></i>
+                            <span>{{ $t('message.feedback') }}</span>
+                        </v-list-tile>
                         <v-list-tile @click="$emit('onClose')" v-if="closeable">
                             <i class="zmdi zmdi-close mr-2 error--text fs-14"></i>
                             <span>{{ $t('message.close') }}</span>
@@ -28,13 +35,18 @@
             <div class="app-contextual-link">
                 <ul class="custom-tab-wrap list-inline">
                     <template v-for="(tab, key) in tabs">
-                        <li @click="onChangeTab(key)" :key="key">
+                        <li @click="onChangeTab(key)" :key="key" class="px-0">
                             <a
                                 href="javascript:void(0)"
-                                class="fs-12 fw-semi-bold px-2 py-1 rounded mx-1"
-                                :class="[{ 'primary white--text': activeTab === key }]"
-                                >{{ tab }}</a
+                                class="fs-12 fw-semi-bold px-3 py-1 mx-0"
+                                :class="[
+                                    {
+                                        'primary white--text': activeTab === key,
+                                    },
+                                ]"
                             >
+                                {{ tab }}
+                            </a>
                         </li>
                     </template>
                 </ul>
@@ -49,9 +61,11 @@ export default {
         'heading',
         'closeable',
         'reloadable',
+        'feedbackable',
         'fullScreen',
         'withTabs',
         'tabs',
+        'extraClass',
         'onCollapse',
         'onReload',
         'onClose',
