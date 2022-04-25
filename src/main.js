@@ -17,6 +17,7 @@ import Nprogress from 'nprogress'
 import VueI18n from 'vue-i18n'
 import VueTour from 'vue-tour'
 import fullscreen from 'vue-fullscreen'
+import '@/filters'
 import $ from 'jquery'
 
 // global components
