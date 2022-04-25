@@ -8,8 +8,6 @@ import router from '@/router'
 
 // Import recap dummy data
 import { recap } from './recap'
-// Import planner dummy data
-import { planner } from './planner'
 
 function getFreshState() {
     return {
