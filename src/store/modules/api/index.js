@@ -8,11 +8,20 @@ import router from '@/router'
 
 // Import recap dummy data
 import { recap } from './recap'
+// Import planner dummy data
+import { planner } from './planner'
 
 function getFreshState() {
     return {
         importResult: null,
         recap: recap,
+        settings: {
+            notifications: {
+                email_wanalyzer: false,
+                email_wplanner: false,
+                email_manalyzer: false,
+            },
+        },
     }
 }
 
@@ -37,6 +46,9 @@ const getters = {
     },
     recap: state => {
         return state.recap
+    },
+    settings: state => {
+        return state.settings
     },
 }
 
@@ -74,6 +86,31 @@ const actions = {
         }
         Nprogress.done()
     },
+    async getSettings(context) {
+        try {
+            // call get user settings api
+            // once fetched settings data, call mutation
+            setTimeout(() => {
+                Nprogress.start()
+            }, 1500)
+        } catch (e) {
+            // process error
+        }
+        Nprogress.done()
+    },
+    async setSettings(context, settings) {
+        try {
+            // call set user settings api
+            // once saved settings data, call mutation
+            setTimeout(() => {
+                Nprogress.start()
+            }, 1500)
+            context.commit('settingsLoaded', settings)
+        } catch (e) {
+            // process error
+        }
+        Nprogress.done()
+    },
 }
 
 // mutations
@@ -87,6 +124,9 @@ const mutations = {
             state[k] = fresh[k]
         }
         refreshUnobservableState()
+    },
+    settingsLoaded(state, value) {
+        state.settings = value
     },
 }
 
