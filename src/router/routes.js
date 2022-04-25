@@ -4,7 +4,7 @@ const Login = () => import('@/pages/session/Login')
 
 // Weekly Components
 const WeeklyAnalyzer = () => import('@/pages/weekly/Analyzer')
-const WeeklyPlanner = () => import('@/pages/weekly/Analyzer')
+const WeeklyPlanner = () => import('@/pages/weekly/Planner')
 
 // Monthly Components
 const MonthlyAnalyzer = () => import('@/pages/monthly/Analyzer')
