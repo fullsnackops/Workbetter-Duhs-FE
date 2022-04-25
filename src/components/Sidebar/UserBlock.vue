@@ -26,9 +26,9 @@
                     <span class="d-block fs-12 fw-light">{{ user.email }}</span>
                 </div>
                 <v-list class="dropdown-list">
-                    <v-list-tile to="/users/user-profile">
-                        <i class="ti-user mr-3 primary--text"></i>
-                        <span>{{ $t('message.userProfile') }}</span>
+                    <v-list-tile @click="openUserSettings">
+                        <i class="ti-settings mr-3 primary--text"></i>
+                        <span>{{ $t('message.userSettings') }}</span>
                     </v-list-tile>
                     <v-list-tile @click="logoutUser">
                         <i class="ti-power-off mr-3 error--text"></i>
@@ -37,14 +37,23 @@
                 </v-list>
             </div>
         </v-menu>
+        <user-settings ref="userSettings" />
     </v-list-tile>
 </template>
 
 <script>
+import UserSettings from '@/components/UserSettings'
 import { mapGetters } from 'vuex'
 
 export default {
+    name: 'UserBlock',
+    components: {
+        UserSettings,
+    },
     methods: {
+        openUserSettings() {
+            this.$refs.userSettings.open()
+        },
         logoutUser() {
             this.$store.dispatch('logoutUser')
         },
