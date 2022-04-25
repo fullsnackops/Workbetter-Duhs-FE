@@ -30,6 +30,24 @@ export default {
     monthlyDashboards: 'Monthly Dashboards',
     monthlyAnalyzer: 'M - Analyzer',
 
+    // User Settings
+    userSettings: 'User Settings',
+    notificationSettings: 'Notification Settings',
+    notificationTitle: 'Tell us how you would Workbetter-Duhs to reach out to you.',
+    notificationDescription:
+        'Select the messages that you want to receive and how you would like the messages delivered.',
+    notificationEmail: 'Email',
+    notificationWAnalyzerReminder: 'Weekly Analyzer Dashboard Reminder',
+    notificationWPlannerReminder: 'Weekly Planner Dashboard Reminder',
+    notificationMAnalzyerReminder: 'Monthly Analyzer Dashboard Reminder',
+    notificationDisabling: '* Disabling all Delivery Methods will prevent the message from being sent',
+    deleteYourAccount: 'Delete Your Account',
+    deleteSadMessage: "We will be sad to see you go but we'll make the process as quick as possible.",
+    deleteDescription: 'To remove your account, click the DELETE MY WORKBETTER-DUHS ACCOUNT and then confirm.',
+    deleteMyAccount: 'Delete My Workbetter-Duhs Account',
+    cancelDeletion: 'Nevermind, I Changed My Mind',
+    confirmDeletion: 'Confirm Account Deletion',
+
     // Meeting Stats
     meetingStats: 'Meeting Stats',
     lastWeek: 'Week Of',
