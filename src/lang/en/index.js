@@ -67,4 +67,9 @@ export default {
     externalVsInternalMeetings: 'External vs. Internal Meetings',
     externalMeetings: 'External Meetings',
     internalMeetings: 'Internal Meetings',
+
+    // Meeting Trends
+    meetingTrends: 'Meeting Trends',
+    weeklyTrend: 'Weekly Trend',
+    monthlyTrend: 'Monthly Trend',
 }
