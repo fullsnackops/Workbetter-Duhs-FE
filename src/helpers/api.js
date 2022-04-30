@@ -1,10 +1,10 @@
 import AppConfig from '@/constants/AppConfig'
 import { store } from '../store/store'
 
-export async function call(endpoint, params = {}, method = 'GET', token) {
+async function call(endpoint, params = {}, method = 'GET', token) {
     let body = null
     let query = ''
-    if (method === 'POST' || method === 'PUT') {
+    if (method !== 'GET') {
         body = JSON.stringify(params)
     } else {
         const parts = []
@@ -35,3 +35,18 @@ export async function call(endpoint, params = {}, method = 'GET', token) {
     }
     return json
 }
+
+function get(endpoint, params = {}, token) {
+    return call(endpoint, params, 'GET', token)
+}
+function post(endpoint, params = {}, token) {
+    return call(endpoint, params, 'POST', token)
+}
+function put(endpoint, params = {}, token) {
+    return call(endpoint, params, 'PUT', token)
+}
+function del(endpoint, params = {}, token) {
+    return call(endpoint, params, 'DELETE', token)
+}
+
+export { call, get, put, del, post }
