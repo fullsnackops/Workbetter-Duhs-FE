@@ -62,7 +62,6 @@ export default {
                         authorization: 'denied',
                     })
                 })
-            this.$store.commit('doRedirect', true)
             this.$store.commit('onLoginError', null)
             this.$store.dispatch('signUpInitiated', 'Google')
         },
@@ -76,14 +75,16 @@ export default {
     },
     watch: {
         signupResult(res) {
-            this.step = res ? 3 : 1
-            this.$store.dispatch('signUpCompleted')
+            if (res) {
+                this.step = 3
+                this.$store.dispatch('signUpCompleted')
+            } else this.step = 1
         },
         importResult(res) {
             this.step = res ? 4 : 1
         },
         user(user) {
-            if (this.step === 3) {
+            if (user) {
                 this.$store.dispatch('importEvents')
             }
         },
