@@ -3,7 +3,7 @@
  */
 import Nprogress from 'nprogress'
 import VueNotifications from 'vue-notifications'
-import { call } from '@/helpers/api'
+import { get } from '@/helpers/api'
 import router from '@/router'
 
 // Import recap dummy data
@@ -59,7 +59,7 @@ const actions = {
             }
 
             ustate('import', 1)
-            const res = await call('/calendar/import')
+            const res = await get('/calendar/import')
             context.commit('onImportCompleted', !!(res && !res.errors))
             ustate('import', 2)
         } catch (e) {
