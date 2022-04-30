@@ -1,10 +1,8 @@
 /* eslint no-undef: 0 */
 import AppConfig from '@/constants/AppConfig'
-import { call } from '@/helpers/api'
-import { store } from '../store/store'
+import { post } from '@/helpers/api'
 
-let signupPromise = Promise.resolve()
-let loginPromise = Promise.resolve()
+let googleUser
 
 const subscribers = []
 function subscribe(cb) {
@@ -17,35 +15,31 @@ function notify(err, session) {
 }
 
 async function onGoogleUserChange(user) {
-    loginPromise = loginPromise.then(
-        () =>
-            new Promise(async resolve => {
-                if (!user || !user.isSignedIn() || store.getters.signupStarted) {
-                    notify(null, null)
-                    return resolve()
-                }
-                // const { id_token } = user.getAuthResponse()
-                const profile = user.getBasicProfile()
-                const email = profile.getEmail()
-                const password = `google:${user.getId()}:${email}`
-                try {
-                    const { message, errors, user, token } = await call('/auth/login', { email, password }, 'POST')
-                    if (errors && errors.length) {
-                        const e = new Error(message || 'Error')
-                        notify(e)
-                        return resolve()
-                    }
-                    notify(null, { user, token })
-                    resolve({ user, token })
-                } catch (e) {
-                    if (e && (e === 'Incorrect email or password' || e === 'UserNotFoundException')) {
-                        await gapi.auth2.getAuthInstance().signOut()
-                    }
-                    notify(e)
-                    resolve()
-                }
-            })
-    )
+    googleUser = user
+}
+
+async function workbetterduhsSignIn() {
+    if (!googleUser || !googleUser.isSignedIn()) {
+        notify(null, null)
+        return
+    }
+    // const { id_token } = user.getAuthResponse()
+    const profile = googleUser.getBasicProfile()
+    const email = profile.getEmail()
+    const password = `google:${googleUser.getId()}:${email}`
+    try {
+        const { message, errors, user, token } = await post('/auth/login', { email, password })
+        if (errors && errors.length) {
+            const e = new Error(message || 'Error')
+            notify(e)
+        }
+        notify(null, { user, token })
+    } catch (e) {
+        if (e && (e === 'Incorrect email or password' || e === 'UserNotFoundException')) {
+            await gapi.auth2.getAuthInstance().signOut()
+        }
+        notify(e)
+    }
 }
 
 const googleInitPromise = new Promise(resolve => {
@@ -70,27 +64,18 @@ const googleInitPromise = new Promise(resolve => {
 const isLoggedIn = async () => {
     try {
         await googleInitPromise
-        return await loginPromise
+        return await workbetterduhsSignIn()
     } catch (e) {
         return null
     }
 }
 
 const signUp = async code => {
-    return (signupPromise = signupPromise.then(
-        () =>
-            new Promise(async (resolve, reject) => {
-                try {
-                    const { message, errors, user, token } = await call('/auth/register', { code }, 'POST')
-                    if (errors && errors.length) {
-                        return reject(new Error(message || 'Error'))
-                    }
-                    resolve({ user, token })
-                } catch (e) {
-                    reject(e)
-                }
-            })
-    ))
+    const { message, errors } = await post('/auth/register', { code })
+    if (errors && errors.length) {
+        return reject(new Error(message || 'Error'))
+    }
+    await workbetterduhsSignIn()
 }
 
 const signOut = async () => {
@@ -98,11 +83,14 @@ const signOut = async () => {
     await gapi.auth2.getAuthInstance().signOut()
 }
 
-function googleSignIn() {
-    return gapi.auth2.getAuthInstance().signIn({ prompt: 'select_account' })
+async function googleSignIn() {
+    await googleInitPromise
+    await gapi.auth2.getAuthInstance().signIn({ prompt: 'select_account' })
+    await workbetterduhsSignIn()
 }
 
-function googleGrantOffline(scope) {
+async function googleGrantOffline(scope) {
+    await googleInitPromise
     return gapi.auth2.getAuthInstance().grantOfflineAccess({
         scope,
     })
