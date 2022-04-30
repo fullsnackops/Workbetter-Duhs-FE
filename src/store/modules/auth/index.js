@@ -8,9 +8,8 @@ import { store } from '../../store'
 import { subscribe, signOut, signUp } from '@/helpers/authenticator'
 
 const state = {
-    user: localStorage.getItem('userId'),
+    user: JSON.parse(localStorage.getItem('userId')),
     token: null,
-    signupStarted: null,
     signupResult: null,
     writeAccessRequired: false,
     loginError: null,
@@ -35,9 +34,6 @@ const getters = {
     token: state => {
         return state.token
     },
-    signupStarted: state => {
-        return state.signupStarted
-    },
     signupResult: state => {
         return state.signupResult
     },
@@ -56,10 +52,8 @@ const getters = {
 const actions = {
     async signupUser(context, code) {
         try {
-            context.commit('onSignupStarted', code)
-            const { user, token } = await signUp(code)
-            store.commit('onSessionUpdate', { user, token })
-            context.commit('onSignupCompleted', user)
+            await signUp(code)
+            context.commit('onSignupCompleted', true)
             context.commit('writeAccessRequired', false)
             context.commit('onLoginError', null)
         } catch (e) {
@@ -113,12 +107,8 @@ const mutations = {
         Nprogress.doneAll()
         state.doRedirect && router.push(router.currentRoute.query.redirect || '/')
     },
-    onSignupStarted(state, code) {
-        state.signupStarted = !!code
-    },
-    onSignupCompleted(state, user) {
-        state.signupStarted = false
-        state.signupResult = !!user
+    onSignupCompleted(state, res) {
+        state.signupResult = res
     },
     writeAccessRequired(state, val) {
         state.writeAccessRequired = !!val
