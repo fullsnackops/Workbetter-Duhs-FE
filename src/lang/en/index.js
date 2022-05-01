@@ -72,4 +72,10 @@ export default {
     meetingTrends: 'Meeting Trends',
     weeklyTrend: 'Weekly Trend',
     monthlyTrend: 'Monthly Trend',
+
+    // Meeting Network
+    meetingNetwork: 'Meeting Network',
+    peopleYouMetLastWeek: 'People You Met With',
+    peopleYouAreMeetingThisWeek: 'People You Are Meeting With',
+    companiesYouMeetWith: 'Companies You Met With',
 }
