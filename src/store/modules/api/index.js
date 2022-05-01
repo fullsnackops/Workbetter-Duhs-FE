@@ -8,11 +8,14 @@ import router from '@/router'
 
 // Import recap dummy data
 import { recap } from './recap'
+// Import planner dummy data
+import { planner } from './planner'
 
 function getFreshState() {
     return {
         importResult: null,
         recap: recap,
+        planner: planner,
         settings: {
             notifications: {
                 email_wanalyzer: false,
@@ -45,6 +48,9 @@ const getters = {
     recap: state => {
         return state.recap
     },
+    planner: state => {
+        return state.planner
+    },
     settings: state => {
         return state.settings
     },
@@ -76,6 +82,18 @@ const actions = {
         try {
             // call get recap api for offset ${offset}
             // once fetched recap data, call mutation
+            setTimeout(() => {
+                Nprogress.start()
+            }, 1500)
+        } catch (e) {
+            // process error
+        }
+        Nprogress.done()
+    },
+    async loadPlanner(context, offset) {
+        try {
+            // call get planner api for offset ${offset}
+            // once fetched planner data, call mutation
             setTimeout(() => {
                 Nprogress.start()
             }, 1500)
