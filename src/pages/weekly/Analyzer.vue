@@ -27,6 +27,11 @@
                 <app-card :heading="$t('message.meetingTrends')" colClasses="xs12">
                     <meeting-trends :stats="meetingTrends"></meeting-trends>
                 </app-card>
+
+                <!-- Meeting Network -->
+                <app-card :heading="$t('message.meetingNetwork')" colClasses="xs12">
+                    <meeting-network period="Week" :stats="meetingNetwork"></meeting-network>
+                </app-card>
             </v-layout>
         </v-container>
     </div>
@@ -37,6 +42,7 @@ import moment from 'moment-timezone'
 import MeetingStats from '@/components/Widgets/MeetingStats'
 import MeetingMakeup from '@/components/Widgets/MeetingMakeup'
 import MeetingTrends from '@/components/Widgets/MeetingTrends'
+import MeetingNetwork from '@/components/Widgets/MeetingNetwork'
 
 export default {
     name: 'WeeklyAnalyzer',
@@ -44,6 +50,7 @@ export default {
         MeetingStats,
         MeetingMakeup,
         MeetingTrends,
+        MeetingNetwork,
     },
     data() {
         return {
@@ -79,6 +86,22 @@ export default {
             const meetingTrends = { ...trends }
             if (meetingTrends) meetingTrends.loading = { loaded: true }
             return meetingTrends || { week: [], month: [], loading: null }
+        },
+        meetingNetwork() {
+            const { makeup, attendees } = this.$store.getters.recap
+            const { externalDomains = [] } = makeup
+            if (!attendees) {
+                return {
+                    externalDomains,
+                    attendees: { peers: [], sharedMap: {} },
+                    loading: null,
+                }
+            }
+            return {
+                externalDomains,
+                attendees,
+                loading: { loaded: true },
+            }
         },
     },
     methods: {
