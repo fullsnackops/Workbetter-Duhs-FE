@@ -144,7 +144,7 @@ const actions = {
         if (!parseInt(change)) return
         const offset = context.state.wplannerOffset + parseInt(change)
         context.commit('wplannerOffset', offset)
-        // context.dispatch('loadWPlanner', offset)
+        context.dispatch('loadWPlanner', offset)
     },
     changeMAnalyzerOffset(context, change) {
         if (!parseInt(change)) return
