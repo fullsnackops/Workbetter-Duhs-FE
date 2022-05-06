@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import moment from 'moment-timezone'
+
 export default {
     name: 'WeeklyPlanner',
     mounted: function() {
@@ -14,6 +16,33 @@ export default {
             dashboard: 'Weekly Planner',
             dateRange: this.currentWeek(),
         })
+    },
+    methods: {
+        currentWeek() {
+            const { timezone } = this.$store.getters.user
+            const dateFormatter = 'MM/DD/YYYY'
+            const startDate = moment
+                .tz(timezone)
+                .startOf('week')
+                .day(1)
+            const f = moment
+                .tz(timezone)
+                .day(5)
+                .set({ hours: 12, minutes: 0, seconds: 0 })
+            const now = moment.tz(timezone)
+
+            if (now.isAfter(f)) {
+                startDate.add(1, 'week')
+            }
+            startDate.add(this.$store.getters.plannerOffset, 'weeks')
+
+            const endDate = startDate
+                .clone()
+                .endOf('week')
+                .day(5)
+
+            return `${startDate.format(dateFormatter)} - ${endDate.format(dateFormatter)}`
+        },
     },
 }
 </script>
