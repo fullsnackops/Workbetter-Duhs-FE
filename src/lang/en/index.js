@@ -78,4 +78,20 @@ export default {
     peopleYouMetLastWeek: 'People You Met With',
     peopleYouAreMeetingThisWeek: 'People You Are Meeting With',
     companiesYouMeetWith: 'Companies You Met With',
+
+    // Meeting Calendar
+    meetingTimeCalendar: 'Meeting Time Calendar',
+    totalMeetings: 'Total Meetings',
+    meetingsHours: 'Meetings Hours',
+
+    // Right Sidebar
+    calendarEvents: 'Calendar Events',
+    recurringPeriod: 'Recurring {period}',
+    singleOccurrance: 'Single Occurance',
+    numberOfAttendees: 'No Attendee | 1 Attendee | {count} Attendees',
+    numberOfDays: 'Today | 1 day | {count} days',
+    firstScheduled: 'First Scheduled:',
+    lastSchedule: 'Last Schedule:',
+    reschedules: 'Reschedules:',
+    organizer: 'Organizer',
 }
