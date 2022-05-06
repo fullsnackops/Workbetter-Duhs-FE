@@ -1,16 +1,22 @@
 <template>
     <v-container fluid grid-list-xl>
         <v-layout row wrap border-rad-sm overflow-hidden>
-            <app-card :heading="$t('message.meetingTimeCalendar')" colClasses="xs12" :fullScreen="true" />
+            <app-card :heading="$t('message.meetingTimeCalendar')" colClasses="xs12" :fullScreen="true">
+                <week-look-ahead-view></week-look-ahead-view>
+            </app-card>
         </v-layout>
     </v-container>
 </template>
 
 <script>
+import WeekLookAheadView from '@/components/Widgets/WeekLookAheadView'
 import moment from 'moment-timezone'
 
 export default {
     name: 'WeeklyPlanner',
+    components: {
+        WeekLookAheadView,
+    },
     mounted: function() {
         this.$store.dispatch('viewDashboard', {
             dashboard: 'Weekly Planner',
