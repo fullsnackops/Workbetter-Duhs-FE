@@ -56,6 +56,7 @@ export default class Blocks {
         if (start.isSameOrBefore(list.start)) return
 
         const totalTimeBetween = start.diff(list.start, 'minutes')
+        let actualTransition = Math.min(MIN_TRANSITION_PREV, totalTimeBetween)
 
         if (list.head.isOOO) {
             if (totalTimeBetween > MIN_FOCUS_TIME) {
@@ -74,9 +75,23 @@ export default class Blocks {
                 list.addBlock(block)
             }
             return
+        } else if (list.head.isTentative) {
+            const from = list.start.toISOString()
+            const to = start.toISOString()
+            const block = {
+                from,
+                to,
+                date,
+                data: {
+                    title: 'Tentative Block',
+                    description: list.head.summary,
+                    category: 'tentative',
+                },
+            }
+            list.addBlock(block)
+            actualTransition = 0
         }
 
-        const actualTransition = Math.min(MIN_TRANSITION_PREV, totalTimeBetween)
         const possibleFocusTime = totalTimeBetween - actualTransition
 
         if (possibleFocusTime >= MIN_FOCUS_TIME) {
@@ -94,6 +109,7 @@ export default class Blocks {
                 },
             }
             list.addBlock(focus)
+            list.focusTime += possibleFocusTime
         }
 
         if (actualTransition > 0) {
@@ -126,26 +142,40 @@ export default class Blocks {
             return
         }
 
-        const block = {
-            from: list.last.toISOString(),
-            to: node.end.toISOString(),
-            date,
-            data: {
-                title: 'Meeting Block',
-                description: node.summary,
-                category: 'meeting',
-            },
+        if (node.isTentative) {
+            const block = {
+                from: list.last.toISOString(),
+                to: node.end.toISOString(),
+                date,
+                data: {
+                    title: 'Tentative Block',
+                    description: node.summary,
+                    category: 'tentative',
+                },
+            }
+            list.addBlock(block)
+        } else {
+            const block = {
+                from: list.last.toISOString(),
+                to: node.end.toISOString(),
+                date,
+                data: {
+                    title: 'Meeting Block',
+                    description: node.summary,
+                    category: 'meeting',
+                },
+            }
+            list.addBlock(block)
         }
-        list.addBlock(block)
 
         // do not add transition in after hours or when next meeting starts immediately after current one
         if (end.isSameOrAfter(nextStart)) return
 
         const totalTimeBetweenEvents = nextStart.diff(end, 'minutes')
 
-        const nextTransition = node.next ? (node.next.isOOO ? 0 : MIN_TRANSITION_PREV) : 0
+        const nextTransition = node.next ? (node.next.isOOO || node.next.isTentative ? 0 : MIN_TRANSITION_PREV) : 0
         const maxPossibleTransition = MIN_TRANSITION_POST + nextTransition
-        const actualTransition = Math.min(maxPossibleTransition, totalTimeBetweenEvents)
+        const actualTransition = node.isTentative ? 0 : Math.min(maxPossibleTransition, totalTimeBetweenEvents)
 
         const possibleFocusTime = totalTimeBetweenEvents - actualTransition
         if (possibleFocusTime >= MIN_FOCUS_TIME) {
@@ -172,6 +202,7 @@ export default class Blocks {
                 },
             }
             list.addBlock(f)
+            list.focusTime += possibleFocusTime
 
             if (nextTransition > 0) {
                 const t2 = {
@@ -206,6 +237,7 @@ export default class Blocks {
     }
 
     calculate() {
+        this.focusTime = 0
         this.current = this.head
         if (this.current) {
             Blocks.calculateHead(this)
