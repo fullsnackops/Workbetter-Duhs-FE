@@ -25,23 +25,3 @@ export default {
     },
 }
 </script>
-
-<style lang="scss" scoped>
-.legend-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    & > div {
-        display: flex;
-        align-items: center;
-
-        .v-badge {
-            padding: 0;
-            height: 12px;
-            width: 12px;
-            @include border-radius(50%);
-        }
-    }
-}
-</style>
