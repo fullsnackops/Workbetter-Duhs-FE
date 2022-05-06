@@ -15,7 +15,7 @@ function getFreshState() {
     return {
         importResult: null,
         recap: recap,
-        planner: planner,
+        planner: {},
         settings: {
             notifications: {
                 email_wanalyzer: false,
@@ -24,6 +24,11 @@ function getFreshState() {
             },
         },
     }
+}
+
+const cache = {
+    recap: {},
+    planner: {},
 }
 
 const state = getFreshState()
@@ -90,15 +95,34 @@ const actions = {
         }
         Nprogress.done()
     },
-    async loadPlanner(context, offset) {
+    async loadWPlanner(context, offset) {
         try {
-            // call get planner api for offset ${offset}
-            // once fetched planner data, call mutation
-            setTimeout(() => {
-                Nprogress.start()
-            }, 1500)
+            if (cache.planner[offset]) {
+                context.commit('plannerLoaded', cache.planner[offset])
+                return
+            }
+
+            if (ustate(`planner.${offset}`)) {
+                return
+            }
+
+            context.commit('plannerLoaded', {})
+
+            ustate(`planner.${offset}`, 1)
+
+            Nprogress.start()
+            setTimeout(() => {}, 1500)
+
+            context.commit('plannerLoaded', planner)
+            cache.planner[offset] = planner
+            ustate(`planner.${offset}`, 2)
         } catch (e) {
             // process error
+            ustate(`planner.${offset}`, 0)
+            VueNotifications.error({
+                message: e.message || e || e.errorMessage || 'Unexpected error',
+            })
+            console.error(e)
         }
         Nprogress.done()
     },
@@ -133,6 +157,9 @@ const actions = {
 const mutations = {
     onImportCompleted(state, result) {
         state.importResult = result
+    },
+    plannerLoaded(state, json) {
+        state.planner = json
     },
     logoutUser(state) {
         const fresh = getFreshState()
