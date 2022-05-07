@@ -38,7 +38,7 @@ export default class Blocks {
 
     addBlock(block) {
         this.blocks.push(block)
-        this.last = moment.tz(block.to, this.date.tz())
+        this.last = moment(block.to)
     }
 
     static appendNode(list, node) {
@@ -60,8 +60,8 @@ export default class Blocks {
 
         if (list.head.isOOO) {
             if (totalTimeBetween > MIN_FOCUS_TIME) {
-                const from = list.start.toISOString()
-                const to = start.toISOString()
+                const from = list.start.valueOf()
+                const to = start.valueOf()
                 const block = {
                     from,
                     to,
@@ -76,8 +76,8 @@ export default class Blocks {
             }
             return
         } else if (list.head.isTentative) {
-            const from = list.start.toISOString()
-            const to = start.toISOString()
+            const from = list.start.valueOf()
+            const to = start.valueOf()
             const block = {
                 from,
                 to,
@@ -96,11 +96,11 @@ export default class Blocks {
 
         if (possibleFocusTime >= MIN_FOCUS_TIME) {
             const focus = {
-                from: list.last.toISOString(),
+                from: list.last.valueOf(),
                 to: list.start
                     .clone()
                     .add(possibleFocusTime, 'minutes')
-                    .toISOString(),
+                    .valueOf(),
                 date,
                 data: {
                     title: 'Focus Block',
@@ -110,15 +110,28 @@ export default class Blocks {
             }
             list.addBlock(focus)
             list.focusTime += possibleFocusTime
-        }
 
-        if (actualTransition > 0) {
             const transition = {
-                from: list.last.toISOString(),
+                from: list.last.valueOf(),
                 to: list.last
                     .clone()
                     .add(actualTransition, 'minutes')
-                    .toISOString(),
+                    .valueOf(),
+                date,
+                data: {
+                    title: 'Transition Block',
+                    description: 'Lorem ipsum dolor sit amet.',
+                    category: 'transition',
+                },
+            }
+            list.addBlock(transition)
+        } else {
+            const transition = {
+                from: list.last.valueOf(),
+                to: list.last
+                    .clone()
+                    .add(totalTimeBetween, 'minutes')
+                    .valueOf(),
                 date,
                 data: {
                     title: 'Transition Block',
@@ -144,8 +157,8 @@ export default class Blocks {
 
         if (node.isTentative) {
             const block = {
-                from: list.last.toISOString(),
-                to: node.end.toISOString(),
+                from: list.last.valueOf(),
+                to: node.end.valueOf(),
                 date,
                 data: {
                     title: 'Tentative Block',
@@ -156,11 +169,11 @@ export default class Blocks {
             list.addBlock(block)
         } else {
             const block = {
-                from: list.last.toISOString(),
-                to: node.end.toISOString(),
+                from: list.last.valueOf(),
+                to: node.end.valueOf(),
                 date,
                 data: {
-                    title: 'Meeting Block',
+                    title: node.summary || 'Meeting block',
                     description: node.summary,
                     category: 'meeting',
                 },
@@ -172,7 +185,6 @@ export default class Blocks {
         if (end.isSameOrAfter(nextStart)) return
 
         const totalTimeBetweenEvents = nextStart.diff(end, 'minutes')
-
         const nextTransition = node.next ? (node.next.isOOO || node.next.isTentative ? 0 : MIN_TRANSITION_PREV) : 0
         const maxPossibleTransition = MIN_TRANSITION_POST + nextTransition
         const actualTransition = node.isTentative ? 0 : Math.min(maxPossibleTransition, totalTimeBetweenEvents)
@@ -180,8 +192,11 @@ export default class Blocks {
         const possibleFocusTime = totalTimeBetweenEvents - actualTransition
         if (possibleFocusTime >= MIN_FOCUS_TIME) {
             const t1 = {
-                from: list.last.toISOString(),
-                to: list.last.clone().add(MIN_TRANSITION_POST, 'minutes'),
+                from: list.last.valueOf(),
+                to: list.last
+                    .clone()
+                    .add(MIN_TRANSITION_POST, 'minutes')
+                    .valueOf(),
                 date,
                 data: {
                     title: 'Transition Block',
@@ -192,8 +207,11 @@ export default class Blocks {
             list.addBlock(t1)
 
             const f = {
-                from: list.last.toISOString(),
-                to: list.last.clone().add(possibleFocusTime, 'minutes'),
+                from: list.last.valueOf(),
+                to: list.last
+                    .clone()
+                    .add(possibleFocusTime, 'minutes')
+                    .valueOf(),
                 date,
                 data: {
                     title: 'Focus Block',
@@ -206,8 +224,11 @@ export default class Blocks {
 
             if (nextTransition > 0) {
                 const t2 = {
-                    from: list.last.toISOString(),
-                    to: list.last.clone().add(nextTransition, 'minutes'),
+                    from: list.last.valueOf(),
+                    to: list.last
+                        .clone()
+                        .add(nextTransition, 'minutes')
+                        .valueOf(),
                     date,
                     data: {
                         title: 'Transition Block',
@@ -219,8 +240,11 @@ export default class Blocks {
             }
         } else {
             const t = {
-                from: list.last.toISOString(),
-                to: list.last.clone().add(actualTransition, 'minutes'),
+                from: list.last.valueOf(),
+                to: list.last
+                    .clone()
+                    .add(totalTimeBetweenEvents, 'minutes')
+                    .valueOf(),
                 date,
                 data: {
                     title: 'Transition Block',
