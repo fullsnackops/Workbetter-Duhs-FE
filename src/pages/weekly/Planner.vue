@@ -2,7 +2,7 @@
     <v-container fluid grid-list-xl>
         <v-layout row wrap border-rad-sm overflow-hidden>
             <app-card :heading="$t('message.meetingTimeCalendar')" colClasses="xs12" :fullScreen="true">
-                <week-look-ahead-view></week-look-ahead-view>
+                <week-look-ahead-view :events="events"></week-look-ahead-view>
             </app-card>
         </v-layout>
     </v-container>
@@ -11,6 +11,8 @@
 <script>
 import WeekLookAheadView from '@/components/Widgets/WeekLookAheadView'
 import moment from 'moment-timezone'
+import Blocks from '@/components/Calendar/Blocks'
+import orderBy from 'lodash/orderBy'
 
 export default {
     name: 'WeeklyPlanner',
@@ -18,10 +20,42 @@ export default {
         WeekLookAheadView,
     },
     mounted: function() {
+        this.$store.dispatch('loadWPlanner', 0)
         this.$store.dispatch('viewDashboard', {
             dashboard: 'Weekly Planner',
             dateRange: this.currentWeek(),
         })
+    },
+    computed: {
+        events() {
+            const { events } = this.$store.getters.planner
+            if (!events) return null
+            const blocks = {}
+            let res = []
+
+            for (const date of Object.keys(events)) {
+                // const timezone = this.$store.getters.user.timezone
+                const timezone = 'America/Chicago'
+                const mdate = moment.tz(date, 'YYYY-MM-DD', timezone)
+
+                const agg = new Blocks(mdate)
+                for (const event of events[date]) {
+                    agg.addEvent(event)
+                }
+
+                agg.calculate()
+                blocks[date] = orderBy(
+                    agg.blocks.filter(
+                        block => block.data.category === 'meeting' || block.data.category === 'tentative'
+                    ),
+                    ['from']
+                )
+                res = res.concat(agg.blocks)
+            }
+            this.$store.commit('calculatedBlocks', blocks)
+
+            return res
+        },
     },
     methods: {
         currentWeek() {
