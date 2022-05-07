@@ -34,7 +34,14 @@ export default class Blocks {
             summary: event.summary,
         }
 
-        Blocks.appendNode(this, node)
+        if (this.tail && this.tail.end.isAfter(node.start)) {
+            const selected = Blocks.chooseOverlapped(this.tail, node)
+            if (selected === node) {
+                Blocks.replaceNode(this, this.tail, node)
+            }
+        } else {
+            Blocks.appendNode(this, node)
+        }
     }
 
     addBlock(block) {
@@ -43,6 +50,47 @@ export default class Blocks {
         if (block.data.category === 'focus') {
             const diff = Math.round(block.to - block.from) / 60000
             this.focusTime += diff
+        }
+    }
+
+    static chooseOverlapped(left, right) {
+        if (left.isOOO) {
+            if (right.isOOO) {
+                left.end = right.end
+            }
+            return left
+        }
+
+        if (right.isOOO) {
+            return right
+        }
+
+        const isOrganizer = left.isOrganizer - right.isOrganizer
+        if (isOrganizer === -1) return right
+        if (isOrganizer === 1) return left
+
+        if (left.isRecurring && right.isRecurring) {
+            left.end = right.end
+            return left
+        }
+
+        return left.created > right.created ? left : right
+    }
+
+    static replaceNode(list, node, replacement) {
+        if (list.head === node) {
+            list.head = replacement
+        } else {
+            let prev = list.head
+            while (prev && prev.next !== node) {
+                prev = prev.next
+            }
+            if (prev) {
+                prev.next = replacement
+            }
+        }
+        if (list.tail === node) {
+            list.tail = replacement
         }
     }
 
