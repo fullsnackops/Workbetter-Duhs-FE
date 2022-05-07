@@ -18,6 +18,7 @@ export default class Blocks {
         this.date = date
         this.addEvent = this.addEvent.bind(this)
         this.addBlock = this.addBlock.bind(this)
+        this.calculate = this.calculate.bind(this)
     }
 
     addEvent(event) {
@@ -39,6 +40,10 @@ export default class Blocks {
     addBlock(block) {
         this.blocks.push(block)
         this.last = moment(block.to)
+        if (block.data.category === 'focus') {
+            const diff = Math.round(block.to - block.from) / 60000
+            this.focusTime += diff
+        }
     }
 
     static appendNode(list, node) {
@@ -48,10 +53,23 @@ export default class Blocks {
     }
 
     static calculateHead(list) {
-        if (!list.head) return
-        const { start } = list.head
         const date = list.date.format('YYYY-MM-DD')
 
+        if (!list.head) {
+            const focus = {
+                from: list.start.valueOf(),
+                to: list.end.valueOf(),
+                date,
+                data: {
+                    title: 'Focus Block',
+                    category: 'focus',
+                },
+            }
+            list.addBlock(focus)
+            return
+        }
+
+        const { start } = list.head
         // don't add transition in after hours
         if (start.isSameOrBefore(list.start)) return
 
@@ -68,7 +86,6 @@ export default class Blocks {
                     date,
                     data: {
                         title: 'Focus Block',
-                        description: 'Lorem ipsum dolor sit amet.',
                         category: 'focus',
                     },
                 }
@@ -104,12 +121,10 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Focus Block',
-                    description: 'Lorem ipsum dolor sit amet.',
                     category: 'focus',
                 },
             }
             list.addBlock(focus)
-            list.focusTime += possibleFocusTime
 
             const transition = {
                 from: list.last.valueOf(),
@@ -120,7 +135,6 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Transition Block',
-                    description: 'Lorem ipsum dolor sit amet.',
                     category: 'transition',
                 },
             }
@@ -135,7 +149,6 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Transition Block',
-                    description: 'Lorem ipsum dolor sit amet.',
                     category: 'transition',
                 },
             }
@@ -200,7 +213,6 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Transition Block',
-                    description: 'transition',
                     category: 'transition',
                 },
             }
@@ -215,12 +227,10 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Focus Block',
-                    description: 'transition',
                     category: 'focus',
                 },
             }
             list.addBlock(f)
-            list.focusTime += possibleFocusTime
 
             if (nextTransition > 0) {
                 const t2 = {
@@ -232,7 +242,6 @@ export default class Blocks {
                     date,
                     data: {
                         title: 'Transition Block',
-                        description: 'transition',
                         category: 'transition',
                     },
                 }
@@ -248,7 +257,6 @@ export default class Blocks {
                 date,
                 data: {
                     title: 'Transition Block',
-                    description: 'transition',
                     category: 'transition',
                 },
             }
@@ -263,10 +271,8 @@ export default class Blocks {
     calculate() {
         this.focusTime = 0
         this.current = this.head
-        if (this.current) {
-            Blocks.calculateHead(this)
-            // while (Blocks.calculateNode(this)) {}
-        }
+        Blocks.calculateHead(this)
+        // while (Blocks.calculateNode(this)) {}
         this.calculated = true
     }
 }
