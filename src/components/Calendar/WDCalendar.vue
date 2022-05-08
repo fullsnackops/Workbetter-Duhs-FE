@@ -31,6 +31,7 @@ export default {
                 existing_appointments: {},
             },
             weeks: {},
+            hours: [],
         }
     },
     computed: {
@@ -56,6 +57,17 @@ export default {
                 this.configuration = val
             },
         },
+    },
+    beforeMount() {
+        let visibleHours = []
+        var today = new Date()
+        let y = today.getFullYear()
+        let m = today.getMonth()
+        let d = today.getDate()
+        for (let i = this.calendar_options.start_hours; i <= this.calendar_options.end_hours - 1; i++) {
+            visibleHours.push(new Date(y, m, d, i, 0, 0))
+        }
+        this.hours = visibleHours
     },
 }
 </script>
