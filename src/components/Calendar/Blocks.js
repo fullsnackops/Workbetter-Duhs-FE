@@ -31,16 +31,29 @@ export default class Blocks {
             end: moment.tz(event.end * 1000, event.timeZone),
             isOOO: event.isOOO,
             isTentative: event.isTentative,
+            isRecurring: event.isRecurring,
+            isOrganizer: event.isOrganizer,
             summary: event.summary,
         }
 
-        if (this.tail && this.tail.end.isAfter(node.start)) {
-            const selected = Blocks.chooseOverlapped(this.tail, node)
-            if (selected === node) {
+        const overlapped = this.tail && this.tail.end.isAfter(node.start)
+        if (!overlapped) {
+            return Blocks.appendNode(this, node)
+        }
+
+        const selected = Blocks.chooseOverlapped(this.tail, node)
+        if (selected === node) {
+            // new node selected
+            if (!node.isOOO) {
+                this.tail.isTentative = 1
                 Blocks.replaceNode(this, this.tail, node)
             }
         } else {
-            Blocks.appendNode(this, node)
+            // old node selected
+            if (!node.isOOO) {
+                node.isTentative = 1
+                Blocks.appendNode(this, node)
+            }
         }
     }
 
