@@ -69,5 +69,13 @@ export default {
         }
         this.hours = visibleHours
     },
+    provide() {
+        const provider = {}
+        Object.defineProperty(provider, 'calendarOptions', {
+            enumerable: true,
+            get: () => this.calendar_options,
+        })
+        return provider
+    },
 }
 </script>
