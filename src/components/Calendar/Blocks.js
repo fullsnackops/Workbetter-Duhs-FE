@@ -46,7 +46,7 @@ export default class Blocks {
             // new node selected
             if (!node.isOOO) {
                 this.tail.isTentative = 1
-                Blocks.replaceNode(this, this.tail, node)
+                Blocks.appendNode(this, node)
             }
         } else {
             // old node selected
@@ -261,9 +261,9 @@ export default class Blocks {
         if (end.isSameOrAfter(nextStart)) return
 
         const totalTimeBetweenEvents = nextStart.diff(end, 'minutes')
-        const nextTransition = node.next ? (node.next.isOOO || node.next.isTentative ? 0 : MIN_TRANSITION_PREV) : 0
-        const maxPossibleTransition = MIN_TRANSITION_POST + nextTransition
-        const actualTransition = node.isTentative ? 0 : Math.min(maxPossibleTransition, totalTimeBetweenEvents)
+        const nextTransition = node.next && !node.next.isOOO && !node.next.isTentative ? MIN_TRANSITION_PREV : 0
+        const maxPossibleTransition = !node.isTentative ? MIN_TRANSITION_POST + nextTransition : 0
+        const actualTransition = Math.min(maxPossibleTransition, totalTimeBetweenEvents)
 
         const possibleFocusTime = totalTimeBetweenEvents - actualTransition
         if (possibleFocusTime >= MIN_FOCUS_TIME) {
