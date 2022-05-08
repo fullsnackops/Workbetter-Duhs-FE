@@ -220,6 +220,8 @@ export default class Blocks {
     static calculateNode(list) {
         const node = list.current
         if (!node) return
+        list.current = list.current.next
+
         const date = list.date.format('YYYY-MM-DD')
         const { end } = node
         const nextStart = node.next ? node.next.start : list.end
@@ -323,17 +325,15 @@ export default class Blocks {
             }
             list.addBlock(t)
         }
-
-        list.current = list.current.next
-
-        return list.current
     }
 
     calculate() {
         this.focusTime = 0
         this.current = this.head
         Blocks.calculateHead(this)
-        // while (Blocks.calculateNode(this)) {}
+        while (this.current) {
+            Blocks.calculateNode(this)
+        }
         this.calculated = true
     }
 }
