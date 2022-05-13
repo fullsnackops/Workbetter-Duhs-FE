@@ -59,7 +59,9 @@ export default class Blocks {
 
     addBlock(block) {
         this.blocks.push(block)
-        this.last = moment(block.to)
+        if (block.data.category !== 'tentative') {
+            this.last = moment(block.to)
+        }
         if (block.data.category === 'focus') {
             const diff = Math.round(block.to - block.from) / 60000
             this.focusTime += diff
@@ -223,7 +225,6 @@ export default class Blocks {
         list.current = list.current.next
 
         const date = list.date.format('YYYY-MM-DD')
-        const { end } = node
         const nextStart = node.next ? node.next.start : list.end
 
         if (node.isOOO) {
@@ -258,11 +259,11 @@ export default class Blocks {
         }
 
         // do not add transition in after hours or when next meeting starts immediately after current one
-        if (end.isSameOrAfter(nextStart)) return
+        if (list.last.isSameOrAfter(nextStart)) return
 
-        const totalTimeBetweenEvents = nextStart.diff(end, 'minutes')
+        const totalTimeBetweenEvents = nextStart.diff(list.last, 'minutes')
         const nextTransition = node.next && !node.next.isOOO && !node.next.isTentative ? MIN_TRANSITION_PREV : 0
-        const maxPossibleTransition = !node.isTentative ? MIN_TRANSITION_POST + nextTransition : 0
+        const maxPossibleTransition = MIN_TRANSITION_POST + nextTransition
         const actualTransition = Math.min(maxPossibleTransition, totalTimeBetweenEvents)
 
         const possibleFocusTime = totalTimeBetweenEvents - actualTransition
