@@ -5,10 +5,56 @@ const MIN_TRANSITION_PREV = 15
 const MIN_TRANSITION_POST = 30
 
 const EventTypes = {
-  meeting:   1,
-  ooo:       2,
+  meeting: 1,
+  ooo: 2,
   tentative: 3,
-  cancelled: 4,
+  cancelled: 4
+}
+
+function chooseOverlapped (left, right) {
+  if (left.isOOO) {
+    if (right.isOOO) {
+      left.end = right.end
+    }
+    return left
+  }
+
+  if (right.isOOO) {
+    return right
+  }
+
+  const isOrganizer = left.isOrganizer - right.isOrganizer
+  if (isOrganizer === -1) return right
+  if (isOrganizer === 1) return left
+
+  const isRecurring = left.isRecurring - right.isRecurring
+  if (isRecurring === -1) return left
+  if (isRecurring === 1) return right
+
+  return left.created > right.created ? left : right
+}
+
+function replaceNode (list, node, replacement) {
+  if (list.head === node) {
+    list.head = replacement
+  } else {
+    let prev = list.head
+    while (prev && prev.next !== node) {
+      prev = prev.next
+    }
+    if (prev) {
+      prev.next = replacement
+    }
+  }
+  if (list.tail === node) {
+    list.tail = replacement
+  }
+}
+
+function appendNode (list, node) {
+  if (!list.head) list.head = node
+  if (list.tail && list.tail !== node) list.tail.next = node
+  list.tail = node
 }
 
 export default class Blocks {
@@ -19,12 +65,13 @@ export default class Blocks {
     this.tail = null
     this.current = null
     this.blocks = []
-    this.events = []
 
     this.last = this.start
     this.date = date
     this.addEvent = this.addEvent.bind(this)
     this.addBlock = this.addBlock.bind(this)
+    this.calculateHead = this.calculateHead.bind(this)
+    this.calculateNode = this.calculateNode.bind(this)
     this.calculate = this.calculate.bind(this)
   }
 
@@ -38,288 +85,165 @@ export default class Blocks {
       end: moment.tz(event.end * 1000, event.timezone),
       isOOO: event.type === EventTypes.ooo,
       isTentative: event.type === EventTypes.tentative,
-      isRecurring: !!event.rcr,
-      isOrganizer: !!event.org,
-      summary: event.summary
+      isRecurring: event.rcr ? 1 : 0,
+      isOrganizer: event.org ? 1 : 0,
+      summary: event.summary,
+      created: event.created
+    }
+
+    if (node.isTentative) {
+      this.addBlock('tentative', node)
+      return
+    }
+
+    if (node.isOOO) {
+      this.addBlock('ooo', node)
+      return
     }
 
     const overlapped = this.tail && this.tail.end.isAfter(node.start)
     if (!overlapped) {
-      return Blocks.appendNode(this, node)
+      return appendNode(this, node)
     }
 
-    const selected = Blocks.chooseOverlapped(this.tail, node)
+    const selected = chooseOverlapped(this.tail, node)
     if (selected === node) {
       // new node selected
-      if (!node.isOOO) {
-        this.tail.isTentative = 1
-        Blocks.appendNode(this, node)
-      }
+      this.tail.isTentative = 1
+      this.addBlock('tentative', this.tail)
+      replaceNode(this, this.tail, node)
     } else {
       // old node selected
       if (!node.isOOO) {
         node.isTentative = 1
-        Blocks.appendNode(this, node)
+        this.addBlock('tentative', node)
       }
     }
   }
 
-  addBlock (block) {
+  addBlock (category, node) {
+    const block = {
+      from: node.start.valueOf(),
+      to: node.end.valueOf(),
+      date: this.date.format('YYYY-MM-DD'),
+      data: {
+        title: node.summary || category,
+        category
+      }
+    }
     this.blocks.push(block)
-    if (block.data.category !== 'tentative') {
+
+    if (category !== 'tentative') {
       this.last = moment(block.to)
     }
-    if (block.data.category === 'focus') {
+
+    if (category === 'focus') {
       const diff = Math.round(block.to - block.from) / 60000
       this.focusTime += diff
     }
   }
 
-  static chooseOverlapped (left, right) {
-    if (left.isOOO) {
-      if (right.isOOO) {
-        left.end = right.end
-      }
-      return left
-    }
-
-    if (right.isOOO) {
-      return right
-    }
-
-    const isOrganizer = left.isOrganizer - right.isOrganizer
-    if (isOrganizer === -1) return right
-    if (isOrganizer === 1) return left
-
-    if (left.isRecurring && right.isRecurring) {
-      left.end = right.end
-      return left
-    }
-
-    return left.created > right.created ? left : right
-  }
-
-  static replaceNode (list, node, replacement) {
-    if (list.head === node) {
-      list.head = replacement
-    } else {
-      let prev = list.head
-      while (prev && prev.next !== node) {
-        prev = prev.next
-      }
-      if (prev) {
-        prev.next = replacement
-      }
-    }
-    if (list.tail === node) {
-      list.tail = replacement
-    }
-  }
-
-  static appendNode (list, node) {
-    if (!list.head) list.head = node
-    if (list.tail && list.tail !== node) list.tail.next = node
-    list.tail = node
-  }
-
-  static calculateHead (list) {
-    const date = list.date.format('YYYY-MM-DD')
-
-    if (!list.head) {
-      const focus = {
-        from: list.start.valueOf(),
-        to: list.end.valueOf(),
-        date,
-        data: {
-          title: 'Focus Block',
-          category: 'focus'
-        }
-      }
-      list.addBlock(focus)
+  calculateHead () {
+    if (!this.head) {
+      this.addBlock('focus', {
+        start: this.start,
+        end: this.end
+      })
       return
     }
 
-    const {start} = list.head
+    const {start} = this.head
     // don't add transition in after hours
-    if (start.isSameOrBefore(list.start)) return
+    if (start.isSameOrBefore(this.start)) return
 
-    const totalTimeBetween = start.diff(list.start, 'minutes')
+    const totalTimeBetween = start.diff(this.start, 'minutes')
     let actualTransition = Math.min(MIN_TRANSITION_PREV, totalTimeBetween)
 
-    if (list.head.isOOO) {
+    if (this.head.isOOO) {
       if (totalTimeBetween > MIN_FOCUS_TIME) {
-        const from = list.start.valueOf()
-        const to = start.valueOf()
-        const block = {
-          from,
-          to,
-          date,
-          data: {
-            title: 'Focus Block',
-            category: 'focus'
-          }
-        }
-        list.addBlock(block)
+        this.addBlock('focus', {
+          start: this.start,
+          end: start
+        })
       }
       return
-    } else if (list.head.isTentative) {
-      const from = list.start.valueOf()
-      const to = start.valueOf()
-      const block = {
-        from,
-        to,
-        date,
-        data: {
-          title: 'Tentative Block',
-          description: list.head.summary,
-          category: 'tentative'
-        }
-      }
-      list.addBlock(block)
-      actualTransition = 0
     }
 
     const possibleFocusTime = totalTimeBetween - actualTransition
 
     if (possibleFocusTime >= MIN_FOCUS_TIME) {
-      const focus = {
-        from: list.last.valueOf(),
-        to: list.start.clone().add(possibleFocusTime, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Focus Block',
-          category: 'focus'
-        }
-      }
-      list.addBlock(focus)
-
-      const transition = {
-        from: list.last.valueOf(),
-        to: list.last.clone().add(actualTransition, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Transition Block',
-          category: 'transition'
-        }
-      }
-      list.addBlock(transition)
+      this.addBlock('focus', {
+        start: this.last,
+        end: this.start.clone().add(possibleFocusTime, 'minutes')
+      })
+      this.addBlock('transition', {
+        start: this.last,
+        end: this.last.clone().add(actualTransition, 'minutes')
+      })
     } else {
-      const transition = {
-        from: list.last.valueOf(),
-        to: list.last.clone().add(totalTimeBetween, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Transition Block',
-          category: 'transition'
-        }
-      }
-      list.addBlock(transition)
+      this.addBlock('transition', {
+        start: this.last,
+        end: this.last.clone().add(totalTimeBetween, 'minutes')
+      })
     }
   }
 
-  static calculateNode (list) {
-    const node = list.current
+  calculateNode () {
+    const node = this.current
     if (!node) return
-    list.current = list.current.next
-
-    const date = list.date.format('YYYY-MM-DD')
-    const nextStart = node.next ? node.next.start : list.end
+    this.current = this.current.next
+    const nextStart = node.next ? node.next.start : this.end
 
     if (node.isOOO) {
-      list.last = node.end.clone()
+      this.last = node.end.clone()
       return
     }
 
-    if (node.isTentative) {
-      const block = {
-        from: list.last.valueOf(),
-        to: node.end.valueOf(),
-        date,
-        data: {
-          title: 'Tentative Block',
-          description: node.summary,
-          category: 'tentative'
-        }
-      }
-      list.addBlock(block)
-    } else {
-      const block = {
-        from: list.last.valueOf(),
-        to: node.end.valueOf(),
-        date,
-        data: {
-          title: node.summary || 'Meeting block',
-          description: node.summary,
-          category: 'meeting'
-        }
-      }
-      list.addBlock(block)
-    }
+    this.addBlock('meeting', node)
 
     // do not add transition in after hours or when next meeting starts immediately after current one
-    if (list.last.isSameOrAfter(nextStart)) return
+    if (this.last.isSameOrAfter(nextStart)) return
 
-    const totalTimeBetweenEvents = nextStart.diff(list.last, 'minutes')
-    const nextTransition = node.next && !node.next.isOOO && !node.next.isTentative ? MIN_TRANSITION_PREV : 0
+    const totalTimeBetweenEvents = nextStart.diff(this.last, 'minutes')
+    const nextTransition = node.next && !node.next.isOOO ? MIN_TRANSITION_PREV : 0
     const maxPossibleTransition = MIN_TRANSITION_POST + nextTransition
     const actualTransition = Math.min(maxPossibleTransition, totalTimeBetweenEvents)
 
     const possibleFocusTime = totalTimeBetweenEvents - actualTransition
     if (possibleFocusTime >= MIN_FOCUS_TIME) {
-      const t1 = {
-        from: list.last.valueOf(),
-        to: list.last.clone().add(MIN_TRANSITION_POST, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Transition Block',
-          category: 'transition'
-        }
-      }
-      list.addBlock(t1)
-
-      const f = {
-        from: list.last.valueOf(),
-        to: list.last.clone().add(possibleFocusTime, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Focus Block',
-          category: 'focus'
-        }
-      }
-      list.addBlock(f)
-
+      this.addBlock('transition', {
+        start: this.last,
+        end: this.last.clone().add(MIN_TRANSITION_POST, 'minutes')
+      })
+      this.addBlock('focus', {
+        start: this.last,
+        end: this.last.clone().add(possibleFocusTime, 'minutes')
+      })
       if (nextTransition > 0) {
-        const t2 = {
-          from: list.last.valueOf(),
-          to: list.last.clone().add(nextTransition, 'minutes').valueOf(),
-          date,
-          data: {
-            title: 'Transition Block',
-            category: 'transition'
-          }
-        }
-        list.addBlock(t2)
+        this.addBlock('transition', {
+          start: this.last,
+          end: this.last.clone().add(nextTransition, 'minutes')
+        })
       }
     } else {
-      const t = {
-        from: list.last.valueOf(),
-        to: list.last.clone().add(totalTimeBetweenEvents, 'minutes').valueOf(),
-        date,
-        data: {
-          title: 'Transition Block',
-          category: 'transition'
-        }
-      }
-      list.addBlock(t)
+      this.addBlock('transition', {
+        start: this.last,
+        end: this.last.clone().add(totalTimeBetweenEvents, 'minutes')
+      })
     }
   }
 
   calculate () {
     this.focusTime = 0
     this.current = this.head
-    Blocks.calculateHead(this)
+    // check if has all day OOO
+    const { start, end } = this
+    const allDayOOO = this.blocks.filter(block => block.data.category === 'ooo' && block.from <= start.valueOf() && block.to >= end.valueOf())
+    if (!allDayOOO.length) {
+      this.calculateHead()
+    }
     while (this.current) {
-      Blocks.calculateNode(this)
+      this.calculateNode()
     }
     this.calculated = true
   }
