@@ -76,14 +76,8 @@ $focus-color: lighten($color: #e5f5e5, $amount: 2%);
 
 ul.building-blocks {
 	li {
-		position: relative;
-		background: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 2px,
-      lighten($color: $gray-light, $amount: 2%) 2px,
-      lighten($color: $gray-light, $amount: 2%) 4px
-    );
+    position: relative;
+    border-right: solid 1px $border-color;
 		z-index: 0;
 
 		&.first_of_appointment {
@@ -92,7 +86,7 @@ ul.building-blocks {
 
 			&.is-active {
 				z-index: 3;
-			}			
+			}		
 			&.last_of_appointment  {
 				.new-event, .existing-event {
 					font-size: 80%;
@@ -118,6 +112,10 @@ ul.building-blocks {
 				user-select: none;
 				will-change: height; //padding: 4px 6px;
 			}
+    }
+    
+    &.is-an-hour {
+			border-bottom: solid 1px $border-color;
 		}
 		
 		.cell_content_block {
@@ -126,17 +124,19 @@ ul.building-blocks {
 				margin: 0;
       }
       h4 {
-        font-size: $font-size-sm;
+        font-size: 0.75rem;
       }
       .buttons {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         position: absolute;
-        bottom: 4px;
+        bottom: 0;
         left: 6px;
         button {
           margin: 0;
+          width: 20px;
+          height: 20px;
         }
       }
 		}
