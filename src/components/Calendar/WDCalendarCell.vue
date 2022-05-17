@@ -15,26 +15,43 @@
                 is_meeting: isCategory('meeting', aIndex),
                 is_transition: isCategory('transition', aIndex),
                 is_focus: isCategory('focus', aIndex),
+                is_ooo: isCategory('ooo', aIndex),
                 is_tentative: isCategory('tentative', aIndex),
                 is_non_working: isCategory('non-working', aIndex),
             }"
             :style="appointmentStyle(aIndex)"
         >
-            <portal-target
-                name="calendar-card-details"
-                :slot-props="appointment"
-                v-if="appointment.data"
-            ></portal-target>
+            <div v-if="appointment.data" class="existing-event">
+                <h4
+                    :style="appointmentTitleStyle(aIndex)"
+                    v-if="
+                        appointment.data.category === 'meeting' ||
+                            appointment.data.category === 'ooo' ||
+                            appointment.data.category === 'tentative'
+                    "
+                >
+                    {{ appointment.data.title }}
+                </h4>
+                <small v-if="calendarOptions.show_description && appointment.end - appointment.start > 2">
+                    {{ appointment.data.description }}
+                </small>
+                <span class="time" v-if="calendarOptions.show_hours">
+                    {{ appointment.data.from | normalizeDate('hh:mm A') }} -
+                    {{ appointment.data.to | normalizeDate('hh:mm A') }}
+                </span>
+                <div class="buttons" v-if="false && appointment.data.category === 'meeting'">
+                    <v-btn flat icon small><v-icon class="font-sm" color="primary">group</v-icon></v-btn>
+                    <v-btn flat icon small><v-icon class="font-sm" color="primary">videocam</v-icon></v-btn>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import isSameDay from 'date-fns/is_same_day'
-import orderBy from 'lodash/orderBy'
-import indexOf from 'lodash/indexOf'
 export default {
-    props: ['cellData'],
+    props: ['cellData', 'dayTentatives'],
     inject: ['calendarOptions'],
     computed: {
         cellAppointments() {
@@ -46,17 +63,6 @@ export default {
                         appointment.start === cellData.index && isSameDay(appointment.data.from, cellData.value)
                 )
                 .map(appointment => appointment)
-        },
-        dayTentatives() {
-            const { cellData } = this
-            const { existing_appointments: appointments } = this.calendarOptions
-            return orderBy(
-                appointments.filter(
-                    appointment =>
-                        appointment.data.category === 'tentative' && isSameDay(appointment.data.from, cellData.value)
-                ),
-                ['start']
-            )
         },
     },
     methods: {
@@ -73,30 +79,58 @@ export default {
             return (cellAppointments[index].end - cellAppointments[index].start + 1) * cellHeight
         },
         appointmentStyle(index) {
-            let left = 0
-            let right = 1
-            let width = 100
-            let height = this.distance(index)
+            let left = '0%'
+            let right = '1px'
+            let height = this.distance(index) + 'px'
             if (this.isCategory('tentative', index)) {
                 const { dayTentatives, cellAppointments } = this
+                const appointment = cellAppointments[index]
                 let tCount = dayTentatives.length
-                let tIndex = indexOf(dayTentatives, cellAppointments[index])
-                left = (tIndex * 100) / tCount
-                right = ((tCount - tIndex - 1) * 100) / tCount
-                width = 100 / tCount
+                let tIndex = dayTentatives.reduce(
+                    (tNum, tentatives, hIndex) => {
+                        if (tentatives.includes(appointment)) {
+                            tNum = { h: hIndex, v: tentatives.indexOf(appointment) }
+                        }
+                        return tNum
+                    },
+                    { h: 0, v: 0 }
+                )
+                if (tCount < 2) tCount = 2
+                left = `${100 - ((tIndex.h + 1) * 100) / tCount}%`
+                right = `${(tIndex.h * 100) / tCount}%`
             }
             return {
-                left: left + '%',
-                right: right + '%',
-                width: width + '%',
-                height: height + 'px',
+                left,
+                right,
+                height,
+            }
+        },
+        appointmentTitleStyle(index) {
+            let width = '100%'
+            const { dayTentatives, cellAppointments } = this
+            const appointment = cellAppointments[index]
+            let tCount = dayTentatives.length
+            if (tCount < 2) tCount = 2
+            let overlappings = 0
+            if (this.isCategory('meeting', index)) {
+                for (const tentatives of dayTentatives) {
+                    for (const tentative of tentatives) {
+                        if (tentative.start < appointment.start && tentative.end > appointment.start) {
+                            overlappings = overlappings + 1
+                        }
+                    }
+                }
+            }
+            width = `${100 - (overlappings * 100) / tCount}%`
+            return {
+                width,
             }
         },
     },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $alpha: 0.75;
 $meeting-color: rgba(
     $color: $meeting-color,
@@ -110,11 +144,15 @@ $focus-color: rgba(
     $color: $focus-color,
     $alpha: $alpha,
 );
+$ooo-color: rgba(
+    $color: $gray-dark,
+    $alpha: $alpha,
+);
 $meeting-color: rgba(
     $color: $meeting-color,
     $alpha: $alpha,
 );
-$tentative-color: transparent;
+$tentative-color: rgba(0, 0, 0, 0.05);
 $non-working-color: darken(
     $color: $transition-color,
     $amount: 20%,
@@ -163,6 +201,12 @@ $non-working-color: darken(
                 padding: 5px;
                 font-size: 0.75rem;
                 font-weight: $font-weight-bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            &:hover h4 {
+                white-space: normal;
             }
             .buttons {
                 display: flex;
@@ -186,15 +230,29 @@ $non-working-color: darken(
         }
 
         &.is_meeting .existing-event {
+            color: white;
             background: $meeting-color;
             opacity: 1;
-            color: white;
+            cursor: pointer;
             @include border(1px solid, $border-color, bottom);
+            &:hover {
+                background: darken($color: $meeting-color, $amount: 10%);
+            }
         }
         &.is_focus .existing-event {
             background: $focus-color url('/static/logos/logo-white.png') no-repeat;
             background-size: 34px 34px;
             background-position: center;
+        }
+        &.is_ooo .existing-event {
+            color: white;
+            background: $ooo-color;
+            opacity: 1;
+            cursor: pointer;
+            @include border(1px solid, $border-color, bottom);
+            &:hover {
+                background: darken($color: $ooo-color, $amount: 10%);
+            }
         }
         &.is_transition .existing-event {
             background: $transition-color;
@@ -205,7 +263,11 @@ $non-working-color: darken(
             .existing-event {
                 color: white;
                 background-color: $tentative-color;
-                @include border(1px solid, $border-color, top bottom);
+                cursor: pointer;
+                @include border(1px solid, $border-color, top left right bottom);
+                &:hover {
+                    background: rgba(0, 0, 0, 0.35);
+                }
                 h4 {
                     font-weight: $font-weight-semi-bold;
                 }
