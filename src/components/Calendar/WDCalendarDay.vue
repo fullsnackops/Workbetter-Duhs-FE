@@ -1,14 +1,14 @@
 <template>
     <div class="mf-calendar-day">
         <!-- Calendar cell(quarter) view -->
-        <m-f-calendar-cell
+        <w-d-calendar-cell
             v-for="quarter in day.date_hours"
             :key="`${day.date}_${quarter.index}`"
             :cell-data.sync="quarter"
             :dayTentatives="sortedTentatives"
             :dayOOOs="sortedOOOs"
             :tentativeColumnCount="tentativeColumnCount"
-        ></m-f-calendar-cell>
+        ></w-d-calendar-cell>
     </div>
 </template>
 
@@ -17,13 +17,14 @@ import isSameDay from 'date-fns/is_same_day'
 import orderBy from 'lodash/orderBy'
 import isEmpty from 'lodash/isEmpty'
 import difference from 'lodash/difference'
-import MFCalendarCell from './MFCalendarCell'
+import WDCalendarCell from './WDCalendarCell'
 
 export default {
+    name: 'WDCalendarDay',
     props: ['day'],
     inject: ['calendarOptions'],
     components: {
-        MFCalendarCell,
+        WDCalendarCell,
     },
     computed: {
         dayTentatives() {
