@@ -1,152 +1,221 @@
 <template>
-  <li :class="{ 'is_meeting': isCategory('meeting'), 'is_transition': isCategory('transition'), 'is_focus': isCategory('focus'), 'is_tentative': isCategory('tentative'), 'is_non_working': isCategory('non-working'), 'inbetween': isInBetween, 'first_of_appointment': cellBlockData.first, 'last_of_appointment': cellBlockData.last, 'is-an-hour': (index+1)%(60/calendarOptions.split_value) === 0}" :style="`height: ${calendarOptions.cell_height}px`">
-    <div v-if="cellBlockData && cellBlockData.first" class="cell_content_block" :style="`height: ${distance}px`">
-      <portal-target name="calendar-card-details" :slot-props="appointment_props" v-if="appointment_props.data"></portal-target>
+    <div class="mf-calendar-cell">
+        <div
+            class="calendar-cell"
+            :class="{
+                'is-an-hour': (cellData.index + 1) % (60 / calendarOptions.split_value) === 0,
+            }"
+            :style="`height: ${calendarOptions.cell_height}px`"
+        ></div>
+        <div
+            v-for="(appointment, aIndex) in cellAppointments"
+            :key="`appointment-${appointment.id}`"
+            class="cell_content_block"
+            :class="{
+                is_meeting: isCategory('meeting', aIndex),
+                is_transition: isCategory('transition', aIndex),
+                is_focus: isCategory('focus', aIndex),
+                is_tentative: isCategory('tentative', aIndex),
+                is_non_working: isCategory('non-working', aIndex),
+            }"
+            :style="appointmentStyle(aIndex)"
+        >
+            <portal-target
+                name="calendar-card-details"
+                :slot-props="appointment"
+                v-if="appointment.data"
+            ></portal-target>
+        </div>
     </div>
-  </li>
 </template>
 
 <script>
+import isSameDay from 'date-fns/is_same_day'
+import orderBy from 'lodash/orderBy'
+import indexOf from 'lodash/indexOf'
 export default {
-  props: ['creator', 'day', 'index', 'cellData'],
-  inject: ['calendarOptions'],
-  computed: {
-    appointments () {
-      return this.calendarOptions.existing_appointments
+    props: ['cellData'],
+    inject: ['calendarOptions'],
+    computed: {
+        cellAppointments() {
+            const { cellData } = this
+            const { existing_appointments: appointments } = this.calendarOptions
+            return appointments
+                .filter(
+                    appointment =>
+                        appointment.start === cellData.index && isSameDay(appointment.data.from, cellData.value)
+                )
+                .map(appointment => appointment)
+        },
+        dayTentatives() {
+            const { cellData } = this
+            const { existing_appointments: appointments } = this.calendarOptions
+            return orderBy(
+                appointments.filter(
+                    appointment =>
+                        appointment.data.category === 'tentative' && isSameDay(appointment.data.from, cellData.value)
+                ),
+                ['start']
+            )
+        },
     },
-    distance () {
-      if (!this.cellBlockData) {
-        return false
-      }
-      let appointment = this.appointments[this.cellData.appointment_id]
-      return ((appointment.end - appointment.start) + 1) * this.calendarOptions.cell_height
+    methods: {
+        isCategory(category, index) {
+            const { cellAppointments } = this
+            return cellAppointments[index] && cellAppointments[index].data.category === category
+        },
+        distance(index) {
+            const { cellAppointments } = this
+            if (!cellAppointments[index]) {
+                return false
+            }
+            const { cell_height: cellHeight } = this.calendarOptions
+            return (cellAppointments[index].end - cellAppointments[index].start + 1) * cellHeight
+        },
+        appointmentStyle(index) {
+            let left = 0
+            let right = 1
+            let width = 100
+            let height = this.distance(index)
+            if (this.isCategory('tentative', index)) {
+                const { dayTentatives, cellAppointments } = this
+                let tCount = dayTentatives.length
+                let tIndex = indexOf(dayTentatives, cellAppointments[index])
+                left = (tIndex * 100) / tCount
+                right = ((tCount - tIndex - 1) * 100) / tCount
+                width = 100 / tCount
+            }
+            return {
+                left: left + '%',
+                right: right + '%',
+                width: width + '%',
+                height: height + 'px',
+            }
+        },
     },
-    isInBetween () {
-      let appointment = this.appointments[this.cellData.appointment_id]
-      let { index } = this.cellData
-      return appointment && index > appointment['start'] && index < appointment['end']
-    },
-    cellBlockData () {
-      let appoints = this.appointments
-      let cDId = this.cellData.appointment_id
-      if (!cDId) {
-        return false
-      }
-      return appoints.hasOwnProperty(cDId) && { first: parseInt(appoints[cDId]['start']) === this.cellData.index, last: parseInt(appoints[cDId]['end']) === this.cellData.index }
-    },
-    status () {
-      if (!this.appointment) {
-        return
-      }
-      return this.appointments[this.cellData.appointment_id]['status']
-    },
-    appointment () {
-      return this.appointments[this.cellData.appointment_id]
-    },
-    appointment_props () {
-      if (!this.appointment) {
-        return
-      }
-      /* Prevent cutting previous hours block
-      let { start, end } = this.appointment
-      let hourStartData = this.day.date_hours[start]
-      let hourEndData = this.day.date_hours[end + 1]
-      if (!hourEndData) {
-        hourEndData = this.day.date_hours[end]
-        hourEndData['value'] = new Date(this.day.date)
-        hourEndData['value'].setHours(24, 0, 0)
-      }
-      return { ...this.appointment, 'start_value': hourStartData, 'end_value': hourEndData }
-      */
-      return this.appointment
-    }
-  },
-  methods: {
-    isCategory (category) {
-      return this.appointment && this.appointment.data.category === category
-    }
-  }
 }
 </script>
 
 <style lang="scss">
+$alpha: 0.75;
+$meeting-color: rgba(
+    $color: $meeting-color,
+    $alpha: $alpha,
+);
+$transition-color: rgba(
+    $color: $transition-color,
+    $alpha: $alpha,
+);
+$focus-color: rgba(
+    $color: $focus-color,
+    $alpha: $alpha,
+);
+$meeting-color: rgba(
+    $color: $meeting-color,
+    $alpha: $alpha,
+);
+$tentative-color: transparent;
+$non-working-color: darken(
+    $color: $transition-color,
+    $amount: 20%,
+);
 
-$gray-light:#dde2e8 !default;
-$focus-color: lighten($color: #e5f5e5, $amount: 2%);
-
-ul.building-blocks {
-	li {
+.mf-calendar-cell {
     position: relative;
-    border-right: solid 1px $border-color;
-		z-index: 0;
 
-		&.first_of_appointment {
-			z-index: 1;
-			opacity: 1;
-
-			&.is-active {
-				z-index: 3;
-			}		
-			&.last_of_appointment  {
-				.new-event, .existing-event {
-					font-size: 80%;
-				}
-				.time {
-					opacity: 0;
-				}
-			}
-
-			.cell_content_block {
-				display: flex;
-				flex-direction: column;
-				>* {
-					flex: 1;
-				}
-				position: absolute;
-				pointer-events: none;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				width: 100%;
-				user-select: none;
-				will-change: height; //padding: 4px 6px;
-			}
-    }
-    
-    &.is-an-hour {
-			border-bottom: solid 1px $border-color;
-		}
-		
-		.cell_content_block {
-			display: none;
-			h4, p, span {
-				margin: 0;
-      }
-      h4 {
-        font-size: 0.75rem;
-      }
-      .buttons {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        position: absolute;
-        bottom: 0;
-        left: 6px;
-        button {
-          margin: 0;
-          width: 20px;
-          height: 20px;
+    .calendar-cell {
+        border-right: solid 1px $border-color;
+        z-index: 0;
+        &.is-an-hour {
+            border-bottom: solid 1px $border-color;
         }
-      }
-		}
-		
-		.time {
-			position: absolute;
-			bottom: 4px;
-			right: 6px;
-			font-size: 11px;
-		}
-	}
+    }
+
+    .cell_content_block {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 1px;
+        z-index: 1;
+        opacity: 1;
+        // pointer-events: none;
+        user-select: none;
+        will-change: height; //padding: 4px 6px;
+
+        .existing-event {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            cursor: default;
+            word-break: break-word;
+            font-size: $font-size-sm;
+            background-color: #bfecff;
+            opacity: 1;
+            color: #1f6570;
+            h4,
+            p,
+            span {
+                margin: 0;
+            }
+            h4 {
+                padding: 5px;
+                font-size: 0.75rem;
+                font-weight: $font-weight-bold;
+            }
+            .buttons {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                position: absolute;
+                bottom: 0;
+                left: 6px;
+                button {
+                    margin: 0;
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+            .time {
+                position: absolute;
+                bottom: 4px;
+                right: 6px;
+                font-size: 11px;
+            }
+        }
+
+        &.is_meeting .existing-event {
+            background: $meeting-color;
+            opacity: 1;
+            color: white;
+            @include border(1px solid, $border-color, bottom);
+        }
+        &.is_focus .existing-event {
+            background: $focus-color url('/static/logos/logo-white.png') no-repeat;
+            background-size: 34px 34px;
+            background-position: center;
+        }
+        &.is_transition .existing-event {
+            background: $transition-color;
+            opacity: 1;
+        }
+        &.is_tentative {
+            z-index: 5;
+            .existing-event {
+                color: white;
+                background-color: $tentative-color;
+                @include border(1px solid, $border-color, top bottom);
+                h4 {
+                    font-weight: $font-weight-semi-bold;
+                }
+            }
+        }
+        &.is_non_working .existing-event {
+            background-color: lighten($color: $non-working-color, $amount: 20%);
+            border-left: solid 3px $non-working-color;
+            color: darken($color: $non-working-color, $amount: 10%);
+        }
+    }
 }
 </style>
