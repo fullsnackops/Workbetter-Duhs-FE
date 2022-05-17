@@ -1,14 +1,15 @@
 <template>
-  <div class="mf-calendar-day">
-    <!-- Calendar cell(quarter) view -->
-    <m-f-calendar-cell
-      v-for="quarter in day.date_hours"
-      :key="`${day.date}_${quarter.index}`"
-      :cell-data.sync="quarter"
-      :dayTentatives="sortedTentatives"
-      :dayOOOs="sortedOOOs"
-    ></m-f-calendar-cell>
-  </div>
+    <div class="mf-calendar-day">
+        <!-- Calendar cell(quarter) view -->
+        <m-f-calendar-cell
+            v-for="quarter in day.date_hours"
+            :key="`${day.date}_${quarter.index}`"
+            :cell-data.sync="quarter"
+            :dayTentatives="sortedTentatives"
+            :dayOOOs="sortedOOOs"
+            :tentativeColumnCount="tentativeColumnCount"
+        ></m-f-calendar-cell>
+    </div>
 </template>
 
 <script>
@@ -31,6 +32,16 @@ export default {
             return orderBy(
                 appointments.filter(
                     appointment => appointment.data.category === 'tentative' && isSameDay(appointment.data.from, date)
+                ),
+                ['start']
+            )
+        },
+        dayMeetings() {
+            const { date } = this.day
+            const { existing_appointments: appointments } = this.calendarOptions
+            return orderBy(
+                appointments.filter(
+                    appointment => appointment.data.category === 'meeting' && isSameDay(appointment.data.from, date)
                 ),
                 ['start']
             )
@@ -74,6 +85,22 @@ export default {
                 blocks = [...difference(blocks, rblocks)]
             }
             return sortedBlocks
+        },
+        tentativeColumnCount() {
+            let meetings = [...this.dayMeetings]
+            let sortedTentatives = [...this.sortedTentatives]
+            if (isEmpty(meetings) || isEmpty(sortedTentatives)) {
+                return 0
+            }
+            const lastTentatives = sortedTentatives[sortedTentatives.length - 1]
+            for (const tentative of lastTentatives) {
+                for (const meeting of meetings) {
+                    if (tentative.start <= meeting.start && tentative.end > meeting.start) {
+                        return sortedTentatives.length + 1
+                    }
+                }
+            }
+            return sortedTentatives.length
         },
     },
 }
