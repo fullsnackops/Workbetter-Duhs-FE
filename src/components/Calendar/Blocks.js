@@ -9,29 +9,39 @@ const EventTypes = {
     ooo: 2,
     tentative: 3,
     cancelled: 4,
+    forced_meeting: 10,
+    forced_ooo: 11,
+    forced_tentative: 12,
 }
 
-function chooseOverlapped(left, right) {
-    if (left.isOOO) {
-        if (right.isOOO) {
+const isOverride = event => event.type >= EventTypes.forced_meeting && event.type <= EventTypes.forced_tentative
+
+function chooseOverlapped(l, r) {
+    if (l.isOOO()) {
+        if (r.isOOO()) {
             left.end = right.end
         }
-        return left
+        if (!isOverride(r)) {
+            return left
+        }
     }
 
-    if (right.isOOO) {
-        return right
+    if (isOverride(l) && !isOverride(r) && !l.isTentative()) return l
+    if (!isOverride(l) && isOverride(r) && !r.isTentative()) return r
+
+    if (r.isOOO) {
+        return r
     }
 
-    const isOrganizer = left.isOrganizer - right.isOrganizer
-    if (isOrganizer === -1) return right
-    if (isOrganizer === 1) return left
+    const isOrganizer = l.isOrganizer - r.isOrganizer
+    if (isOrganizer === -1) return r
+    if (isOrganizer === 1) return l
 
-    const isRecurring = left.isRecurring - right.isRecurring
-    if (isRecurring === -1) return left
-    if (isRecurring === 1) return right
+    const isRecurring = l.isRecurring - r.isRecurring
+    if (isRecurring === -1) return l
+    if (isRecurring === 1) return r
 
-    return left.created > right.created ? left : right
+    return l.created > r.created ? l : r
 }
 
 function replaceNode(list, node, replacement) {
@@ -81,10 +91,12 @@ export default class Blocks {
         }
 
         const node = {
+            id: event.id,
+            type: event.type,
             start: moment.tz(event.start * 1000, event.timezone),
             end: moment.tz(event.end * 1000, event.timezone),
-            isOOO: event.type === EventTypes.ooo,
-            isTentative: event.type === EventTypes.tentative,
+            isOOO: event.type === EventTypes.ooo || event.type === EventTypes.forced_ooo,
+            isTentative: event.type === EventTypes.tentative || event.type === EventTypes.forced_tentative,
             isRecurring: event.rcr ? 1 : 0,
             isOrganizer: event.org ? 1 : 0,
             summary: event.summary,
@@ -118,12 +130,15 @@ export default class Blocks {
 
     addBlock(category, node) {
         const block = {
+            id: node.id,
             from: node.start.valueOf(),
             to: node.end.valueOf(),
             date: this.date.format('YYYY-MM-DD'),
             data: {
                 title: node.summary || category,
                 category,
+                isRecurring: node.isRecurring,
+                isOrganizer: node.isRecurring,
             },
         }
         this.blocks.push(block)
