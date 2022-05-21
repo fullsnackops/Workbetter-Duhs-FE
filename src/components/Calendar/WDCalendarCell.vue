@@ -22,27 +22,32 @@
             :style="appointmentStyle(aIndex)"
         >
             <div v-if="appointment.data" class="existing-event">
-                <h4
-                    :style="appointmentTitleStyle(aIndex)"
+                <template
                     v-if="
                         appointment.data.category === 'meeting' ||
                             appointment.data.category === 'ooo' ||
                             appointment.data.category === 'tentative'
                     "
                 >
-                    {{ appointment.data.title }}
-                </h4>
-                <small v-if="calendarOptions.show_description && appointment.end - appointment.start > 2">
-                    {{ appointment.data.description }}
-                </small>
-                <span class="time" v-if="calendarOptions.show_hours">
-                    {{ appointment.data.from | normalizeDate('hh:mm A') }} -
-                    {{ appointment.data.to | normalizeDate('hh:mm A') }}
-                </span>
-                <div class="buttons" v-if="false && appointment.data.category === 'meeting'">
-                    <v-btn flat icon small><v-icon class="font-sm" color="primary">group</v-icon></v-btn>
-                    <v-btn flat icon small><v-icon class="font-sm" color="primary">videocam</v-icon></v-btn>
-                </div>
+                    <v-layout justify-space-arround class="ma-0">
+                        <h4 :style="appointmentTitleStyle(aIndex)">
+                            {{ appointment.data.title }}
+                        </h4>
+                        <v-spacer></v-spacer>
+                        <calendar-actions class="calendar-action" :appointment="appointment"></calendar-actions>
+                    </v-layout>
+                    <small v-if="calendarOptions.show_description && appointment.end - appointment.start > 2">
+                        {{ appointment.data.description }}
+                    </small>
+                    <span class="time" v-if="calendarOptions.show_hours">
+                        {{ appointment.data.from | normalizeDate('hh:mm A') }} -
+                        {{ appointment.data.to | normalizeDate('hh:mm A') }}
+                    </span>
+                    <div class="buttons" v-if="false && appointment.data.category === 'meeting'">
+                        <v-btn flat icon small><v-icon class="font-sm" color="primary">group</v-icon></v-btn>
+                        <v-btn flat icon small><v-icon class="font-sm" color="primary">videocam</v-icon></v-btn>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -50,7 +55,11 @@
 
 <script>
 import isSameDay from 'date-fns/is_same_day'
+import CalendarActions from './CalendarActions'
 export default {
+    components: {
+        CalendarActions,
+    },
     props: ['cellData', 'dayTentatives'],
     inject: ['calendarOptions'],
     computed: {
@@ -208,6 +217,9 @@ $non-working-color: darken(
             &:hover h4 {
                 white-space: normal;
             }
+            .calendar-action {
+                // flex: 0 0 40px;
+            }
             .buttons {
                 display: flex;
                 justify-content: flex-start;
@@ -229,14 +241,19 @@ $non-working-color: darken(
             }
         }
 
-        &.is_meeting .existing-event {
-            color: white;
-            background: $meeting-color;
-            opacity: 1;
-            cursor: pointer;
-            @include border(1px solid, $border-color, bottom);
+        &.is_meeting {
             &:hover {
-                background: darken($color: $meeting-color, $amount: 10%);
+                z-index: 10;
+            }
+            .existing-event {
+                color: white;
+                background: $meeting-color;
+                opacity: 1;
+                cursor: pointer;
+                @include border(1px solid, $border-color, bottom);
+                &:hover {
+                    background: darken($color: $meeting-color, $amount: 10%);
+                }
             }
         }
         &.is_focus .existing-event {
@@ -244,14 +261,19 @@ $non-working-color: darken(
             background-size: 34px 34px;
             background-position: center;
         }
-        &.is_ooo .existing-event {
-            color: white;
-            background: $ooo-color;
-            opacity: 1;
-            cursor: pointer;
-            @include border(1px solid, $border-color, bottom);
+        &.is_ooo {
             &:hover {
-                background: darken($color: $ooo-color, $amount: 10%);
+                z-index: 10;
+            }
+            .existing-event {
+                color: white;
+                background: $ooo-color;
+                opacity: 1;
+                cursor: pointer;
+                @include border(1px solid, $border-color, bottom);
+                &:hover {
+                    background: darken($color: $ooo-color, $amount: 10%);
+                }
             }
         }
         &.is_transition .existing-event {
