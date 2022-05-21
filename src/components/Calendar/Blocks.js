@@ -17,17 +17,15 @@ const EventTypes = {
 const isOverride = event => event.type >= EventTypes.forced_meeting && event.type <= EventTypes.forced_tentative
 
 function chooseOverlapped(l, r) {
-    if (l.isOOO()) {
-        if (r.isOOO()) {
-            left.end = right.end
-        }
-        if (!isOverride(r)) {
-            return left
-        }
-    }
+    if (isOverride(l) && !isOverride(r)) return l
+    if (!isOverride(l) && isOverride(r)) return r
 
-    if (isOverride(l) && !isOverride(r) && !l.isTentative()) return l
-    if (!isOverride(l) && isOverride(r) && !r.isTentative()) return r
+    if (l.isOOO) {
+        if (r.isOOO) {
+            l.end = r.end
+        }
+        return l
+    }
 
     if (r.isOOO) {
         return r
