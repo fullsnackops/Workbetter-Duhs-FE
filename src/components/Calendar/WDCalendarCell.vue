@@ -29,8 +29,8 @@
                             appointment.data.category === 'tentative'
                     "
                 >
-                    <v-layout justify-space-arround class="ma-0">
-                        <h4 :style="appointmentTitleStyle(aIndex)">
+                    <v-layout justify-space-arround class="ma-0" :style="appointmentTitleStyle(aIndex)">
+                        <h4>
                             {{ appointment.data.title }}
                         </h4>
                         <v-spacer></v-spacer>
@@ -217,9 +217,6 @@ $non-working-color: darken(
             &:hover h4 {
                 white-space: normal;
             }
-            .calendar-action {
-                // flex: 0 0 40px;
-            }
             .buttons {
                 display: flex;
                 justify-content: flex-start;
@@ -242,9 +239,6 @@ $non-working-color: darken(
         }
 
         &.is_meeting {
-            &:hover {
-                z-index: 10;
-            }
             .existing-event {
                 color: white;
                 background: $meeting-color;
@@ -262,9 +256,6 @@ $non-working-color: darken(
             background-position: center;
         }
         &.is_ooo {
-            &:hover {
-                z-index: 10;
-            }
             .existing-event {
                 color: white;
                 background: $ooo-color;
