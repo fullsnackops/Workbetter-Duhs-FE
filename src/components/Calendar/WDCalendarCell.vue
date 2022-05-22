@@ -121,7 +121,7 @@ export default {
             let tCount = dayTentatives.length
             if (tCount < 2) tCount = 2
             let overlappings = 0
-            if (this.isCategory('meeting', index)) {
+            if (this.isCategory('meeting', index) || this.isCategory('ooo', index)) {
                 for (const tentatives of dayTentatives) {
                     for (const tentative of tentatives) {
                         if (tentative.start < appointment.start && tentative.end > appointment.start) {
