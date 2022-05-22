@@ -1,47 +1,57 @@
 <template>
-    <v-menu
-        bottom
-        offset-y
-        right
-        content-class="calendar-action-dropdown"
-        nudge-top="-10"
-        nudge-right="0"
-        transition="slide-y-transition"
-    >
-        <v-btn dark small icon slot="activator" class="ma-0">
-            <v-icon small>more_vert</v-icon>
-        </v-btn>
-        <div class="dropdown-content">
-            <div class="dropdown-top white--text primary">
-                <span class="white--text fs-14 fw-bold d-block">
-                    {{ eventData.title }}
-                    <span class="fs-12 fw-light" v-if="eventData.isRecurring">(Recurring)</span>
-                </span>
+    <div>
+        <!-- Event Action Menu -->
+        <v-menu
+            bottom
+            offset-y
+            left
+            content-class="calendar-action-dropdown"
+            nudge-top="-10"
+            nudge-right="0"
+            transition="slide-y-transition"
+            @click.native.stop
+        >
+            <v-btn dark small icon slot="activator" class="ma-0">
+                <v-icon small>more_vert</v-icon>
+            </v-btn>
+            <div class="dropdown-content">
+                <div class="dropdown-top white--text primary">
+                    <span class="white--text fs-14 fw-bold d-block">
+                        {{ eventData.title }}
+                        <span class="fs-12 fw-light" v-if="eventData.isRecurring">
+                            (Recurring)
+                        </span>
+                    </span>
+                </div>
+                <v-list class="dropdown-list">
+                    <v-subheader>
+                        Add Tag to Event
+                    </v-subheader>
+                    <template v-for="(action, index) in actionTypes">
+                        <v-list-tile @click="setEvent(action)" :key="index" ripple>
+                            <v-list-tile-action>
+                                <v-icon
+                                    v-if="action.type !== 'ignore' && action.type === eventData.category"
+                                    color="secondary"
+                                >
+                                    done
+                                </v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <span>{{ action.title }}</span>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </template>
+                </v-list>
             </div>
-            <v-list class="dropdown-list">
-                <template v-for="(action, index) in actionTypes">
-                    <v-list-tile @click="setEvent(action)" :key="index" ripple>
-                        <v-list-tile-action>
-                            <v-icon
-                                v-if="action.type !== 'ignore' && action.type === appointment.data.category"
-                                color="secondary"
-                                >done</v-icon
-                            >
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <span>{{ action.title }}</span>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </template>
-            </v-list>
-        </div>
+        </v-menu>
         <!-- Confirm Modal -->
         <calendar-action-confirm
             ref="calendarActionConfirmModal"
             :appointment="appointment"
             :action="selectedAction"
         ></calendar-action-confirm>
-    </v-menu>
+    </div>
 </template>
 
 <script>
@@ -77,12 +87,16 @@ export default {
             if (this.eventData.isRecurring) {
                 this.openConfirmModal()
             } else {
-                this.$store.commit('modifyEvent', { id: this.appointment.id, type: action.eventType })
+                this.$store.commit('modifyEvent', {
+                    id: this.appointment.id,
+                    type: action.eventType,
+                    origin: 'Calendar Menu',
+                })
             }
         },
     },
     computed: {
-        eventData: function() {
+        eventData() {
             return this.appointment.data
         },
     },
@@ -117,9 +131,21 @@ export default {
                     .v-list__tile__action {
                         min-width: 40px;
                     }
+                    .sub-title {
+                        position: absolute;
+                        font-size: 10px;
+                        bottom: 0;
+                        left: 25px;
+                    }
                 }
             }
         }
     }
+    .v-subheader {
+        background: rgb(113, 230, 244);
+    }
+}
+.v-btn--small {
+    height: 24px;
 }
 </style>
