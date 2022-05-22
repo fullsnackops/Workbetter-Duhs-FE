@@ -20,9 +20,13 @@
             </div>
             <v-list class="dropdown-list">
                 <template v-for="(action, index) in actionTypes">
-                    <v-list-tile @click="setEvent(action.type)" :key="index" ripple>
+                    <v-list-tile @click="setEvent(action)" :key="index" ripple>
                         <v-list-tile-action>
-                            <v-icon v-if="action.isActive" color="secondary">done</v-icon>
+                            <v-icon
+                                v-if="action.type !== 'ignore' && action.type === appointment.data.category"
+                                color="secondary"
+                                >done</v-icon
+                            >
                         </v-list-tile-action>
                         <v-list-tile-content>
                             <span>{{ action.title }}</span>
@@ -35,7 +39,7 @@
         <calendar-action-confirm
             ref="calendarActionConfirmModal"
             :appointment="appointment"
-            :actionType="selectedAction"
+            :action="selectedAction"
         ></calendar-action-confirm>
     </v-menu>
 </template>
@@ -52,41 +56,28 @@ export default {
         return {
             actionTypes: [
                 {
-                    type: 'meeting',
-                    title: 'Consider this Meeting Time',
-                    isActive: this.appointment.data.category === 'meeting',
+                    type: 'personal',
+                    title: 'Add workbetter:personal Tag',
                 },
                 {
-                    type: 'no-meeting',
-                    title: 'Do not consider this Meeting Time',
-                    isActive: this.appointment.data.category === 'tentative',
-                },
-                {
-                    type: 'non-working',
-                    title: 'Consider this non-working Time',
-                    isActive: this.appointment.data.category === 'ooo',
-                },
-                {
-                    type: 'ignore',
-                    title: 'Ignore this Event',
-                    isActive: false,
+                    type: 'critical',
+                    title: 'Add workbetter:critical Tag',
                 },
             ],
-            selectedAction: '',
+            selectedAction: null,
         }
     },
     methods: {
         openConfirmModal() {
             this.$refs.calendarActionConfirmModal.open()
         },
-        setEvent(type) {
-            console.log(type)
-            this.selectedAction = type
+        setEvent(action) {
+            this.selectedAction = action
             // open confirm modal for the recurring event only
             if (this.eventData.isRecurring) {
                 this.openConfirmModal()
             } else {
-                // save event settings here
+                this.$store.commit('modifyEvent', { id: this.appointment.id, type: action.eventType })
             }
         },
     },
