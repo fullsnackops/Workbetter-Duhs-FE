@@ -29,13 +29,7 @@
                             appointment.data.category === 'tentative'
                     "
                 >
-                    <v-layout justify-space-arround class="ma-0" :style="appointmentTitleStyle(aIndex)">
-                        <h4>
-                            {{ appointment.data.title }}
-                        </h4>
-                        <v-spacer></v-spacer>
-                        <calendar-actions class="calendar-action" :appointment="appointment"></calendar-actions>
-                    </v-layout>
+                    <cell-title :appointment="appointment" :style="appointmentTitleStyle(aIndex)" />
                     <small v-if="calendarOptions.show_description && appointment.end - appointment.start > 2">
                         {{ appointment.data.description }}
                     </small>
@@ -56,9 +50,11 @@
 <script>
 import isSameDay from 'date-fns/is_same_day'
 import CalendarActions from './CalendarActions'
+import CellTitle from './MFCalendarCellTitle'
 export default {
     components: {
         CalendarActions,
+        CellTitle,
     },
     props: ['cellData', 'dayTentatives'],
     inject: ['calendarOptions'],
@@ -201,21 +197,9 @@ $non-working-color: darken(
             background-color: #bfecff;
             opacity: 1;
             color: #1f6570;
-            h4,
             p,
             span {
                 margin: 0;
-            }
-            h4 {
-                padding: 5px;
-                font-size: 0.75rem;
-                font-weight: $font-weight-bold;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            &:hover h4 {
-                white-space: normal;
             }
             .buttons {
                 display: flex;
