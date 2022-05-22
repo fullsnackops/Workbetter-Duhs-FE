@@ -1,25 +1,22 @@
+/* eslint-disable no-case-declarations */
+import AppConfig from '@/constants/AppConfig'
 const moment = require('moment-timezone')
 
 const MIN_FOCUS_TIME = 60
 const MIN_TRANSITION_PREV = 15
 const MIN_TRANSITION_POST = 30
 
+const TAG_CRITICAL = AppConfig.meetingTag.critical
+const TAG_PERSONAL = AppConfig.meetingTag.personal
+
 const EventTypes = {
     meeting: 1,
     ooo: 2,
     tentative: 3,
     cancelled: 4,
-    forced_meeting: 10,
-    forced_ooo: 11,
-    forced_tentative: 12,
 }
 
-const isOverride = event => event.type >= EventTypes.forced_meeting && event.type <= EventTypes.forced_tentative
-
 function chooseOverlapped(l, r) {
-    if (isOverride(l) && !isOverride(r)) return l
-    if (!isOverride(l) && isOverride(r)) return r
-
     if (l.isOOO) {
         if (r.isOOO) {
             l.end = r.end
@@ -67,20 +64,31 @@ function appendNode(list, node) {
 
 export default class Blocks {
     constructor(date) {
-        this.start = date.clone().set({ hours: 8, minutes: 0, seconds: 0, milliseconds: 0 })
-        this.end = date.clone().set({ hours: 17, minutes: 0, seconds: 0, milliseconds: 0 })
+        this.start = date.clone().set({
+            hours: 8,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0,
+        })
+        this.end = date.clone().set({
+            hours: 17,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0,
+        })
         this.head = null
         this.tail = null
         this.current = null
         this.blocks = []
+        this.focusBlocks = []
 
         this.last = this.start
         this.date = date
-        this.addEvent = this.addEvent.bind(this)
-        this.addBlock = this.addBlock.bind(this)
-        this.calculateHead = this.calculateHead.bind(this)
-        this.calculateNode = this.calculateNode.bind(this)
-        this.calculate = this.calculate.bind(this)
+        for (const prop of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+            if (this[prop] instanceof Function && prop !== 'constructor') {
+                this[prop] = this[prop].bind(this)
+            }
+        }
     }
 
     addEvent(event) {
@@ -98,7 +106,9 @@ export default class Blocks {
             isRecurring: event.rcr ? 1 : 0,
             isOrganizer: event.org ? 1 : 0,
             summary: event.summary,
+            description: event.description,
             created: event.created,
+            event,
         }
 
         if (node.isTentative) {
@@ -134,9 +144,10 @@ export default class Blocks {
             date: this.date.format('YYYY-MM-DD'),
             data: {
                 title: node.summary || category,
+                description: node.description,
                 category,
                 isRecurring: node.isRecurring,
-                isOrganizer: node.isRecurring,
+                isOrganizer: node.isOrganizer,
             },
         }
         this.blocks.push(block)
@@ -148,7 +159,40 @@ export default class Blocks {
         if (category === 'focus') {
             const diff = Math.round(block.to - block.from) / 60000
             this.focusTime += diff
+            this.focusBlocks.push(block)
         }
+
+        if (category === 'meeting' || category === 'tentative') {
+            block.data.attendees = node.event.attendees
+            block.data.recurrence = this.getRecurrence(node.event)
+            block.data.org = node.event.org
+            block.data.created = node.event.created * 1000
+            block.data.reschedules = node.event.reschedules
+        }
+
+        if (block.data.title.includes(TAG_CRITICAL)) {
+            block.data.tag_critical = 1
+        }
+
+        if (block.data.title.includes(TAG_PERSONAL)) {
+            block.data.tag_personal = 1
+        }
+    }
+
+    getRecurrence({ recurrence }) {
+        if (!recurrence) return false
+        let [rrule] = recurrence
+        if (!rrule.startsWith('RRULE:')) {
+            console.error('Invalid recurrence rule')
+            return false
+        }
+        rrule = rrule.substr(6)
+        rrule = rrule.split(';').reduce((acc, cur) => {
+            const parts = cur.split('=')
+            acc[parts[0]] = parts[1]
+            return acc
+        }, {})
+        return rrule.FREQ.toLowerCase()
     }
 
     calculateHead() {
