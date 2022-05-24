@@ -30,10 +30,7 @@
                     <template v-for="(action, index) in actionTypes">
                         <v-list-tile @click="setEvent(action)" :key="index" ripple>
                             <v-list-tile-action>
-                                <v-icon
-                                    v-if="action.type !== 'ignore' && action.type === eventData.category"
-                                    color="secondary"
-                                >
+                                <v-icon v-if="eventData[`${'tag_' + action.type}`]" color="secondary">
                                     done
                                 </v-icon>
                             </v-list-tile-action>
