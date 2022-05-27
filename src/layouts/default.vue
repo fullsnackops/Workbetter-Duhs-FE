@@ -24,6 +24,8 @@
                         <router-view></router-view>
                     </transition>
                 </v-content>
+                <!-- Right Sidebar -->
+                <right-sidebar v-if="showRightSidebar"></right-sidebar>
             </template>
         </div>
     </v-app>
@@ -32,14 +34,22 @@
 <script>
 import { mapGetters } from 'vuex'
 import Header from '@/components/Header/Header.vue'
+import RightSidebar from '@/components/Sidebar/RightSidebar'
 
 export default {
     name: 'default',
     components: {
         appHeader: Header,
+        RightSidebar,
     },
     computed: {
         ...mapGetters(['darkMode', 'collapseSidebar', 'boxLayout', 'rtlLayout', 'selectedRouterAnimation', 'user']),
+        showRightSidebar() {
+            if (this.$breadcrumbs[0]) {
+                return this.$breadcrumbs[0].meta.type === 'wplanner'
+            }
+            return undefined
+        },
     },
 }
 </script>
