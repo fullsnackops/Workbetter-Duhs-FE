@@ -16,6 +16,7 @@ function getFreshState() {
         importResult: null,
         recap: recap,
         planner: {},
+        calculatedBlocks: {},
         settings: {
             notifications: {
                 email_wanalyzer: false,
@@ -55,6 +56,9 @@ const getters = {
     },
     planner: state => {
         return state.planner
+    },
+    calculatedBlocks: state => {
+        return state.calculatedBlocks
     },
     settings: state => {
         return state.settings
@@ -167,6 +171,9 @@ const mutations = {
             state[k] = fresh[k]
         }
         refreshUnobservableState()
+    },
+    calculatedBlocks(state, value) {
+        state.calculatedBlocks = value
     },
     settingsLoaded(state, value) {
         state.settings = value
