@@ -19,9 +19,13 @@
 </template>
 
 <script>
+import moment from 'moment-timezone'
 import EventDetails from '@/components/Sidebar/EventDetails'
 
 export default {
+    components: {
+        EventDetails,
+    },
     data() {
         return {
             toggle: false,
