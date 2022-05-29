@@ -13,13 +13,12 @@ const state = {
     signupResult: null,
     writeAccessRequired: false,
     loginError: null,
-    doRedirect: false,
 }
 
 subscribe((err, session) => {
     if (err) return store.commit('onLoginError', err)
+    if (session && store.getters.token === session.token.accessToken) return
     store.commit('onSessionUpdate', session)
-    store.commit('doRedirect', false)
     // const { user } = session || {}
     // if (user && !store.getters.userProps) {
     //     store.dispatch('loadUserProps')
@@ -42,9 +41,6 @@ const getters = {
     },
     loginError: state => {
         return state.loginError
-    },
-    doRedirect: state => {
-        return state.doRedirect
     },
 }
 
@@ -90,7 +86,13 @@ const mutations = {
         state.signupResult = null
     },
     onSessionUpdate(state, session) {
-        if (!session) return
+        if (!session) {
+            localStorage.removeItem('userId')
+            state.user = null
+            state.token = null
+            state.signupResult = null
+            return
+        }
         state.token = session.token.accessToken
         state.user = session.user
         localStorage.setItem('userId', JSON.stringify(state.user))
@@ -105,7 +107,7 @@ const mutations = {
             )
         }
         Nprogress.doneAll()
-        state.doRedirect && router.push(router.currentRoute.query.redirect || '/')
+        router.push(router.currentRoute.query.redirect || '/')
     },
     onSignupCompleted(state, res) {
         state.signupResult = res
@@ -115,9 +117,6 @@ const mutations = {
     },
     onLoginError(state, err) {
         state.loginError = err
-    },
-    doRedirect(state, val) {
-        state.doRedirect = val
     },
 }
 
