@@ -80,6 +80,52 @@ export default {
             }
             return undefined
         },
+        events() {
+            const blocks = this.$store.getters.calculatedBlocks
+            const visibleBlocks = {}
+            // const { timezone } = this.$store.getters.user
+            const timezone = 'America/Chicago'
+            for (const date of Object.keys(blocks)) {
+                const md = moment.tz(date, 'YYYY-MM-DD', timezone)
+                for (const block of blocks[date]) {
+                    visibleBlocks[date] = visibleBlocks[date] || {
+                        d1: md.format('DD'),
+                        d2: md.format('dddd'),
+                        blocks: [],
+                    }
+                    visibleBlocks[date].blocks.push({
+                        id: block.id,
+                        category: block.data.category,
+                        title: block.data.title,
+                        description: block.data.description,
+                        from: block.from,
+                        to: block.to,
+                        time1: moment.tz(block.from, timezone).format('h:mm A'),
+                        time2: moment.tz(block.to, timezone).format('h:mm A'),
+                        hours: Math.round((block.to - block.from) / 36000) / 100,
+                        isOrganizer: block.data.isOrganizer,
+                        org: block.data.org,
+                        attendees: block.data.attendees,
+                        isRecurring: block.data.isRecurring,
+                        recurrence: block.data.recurrence,
+                        scheduled1: moment.tz(block.data.created, timezone).format('DD/MM/YYYY'),
+                        scheduleDiff1: moment.tz(timezone).diff(moment.tz(block.data.created, timezone), 'days'),
+                        reschedules: block.data.reschedules
+                            ? {
+                                  count: block.data.reschedules.count,
+                                  last: moment.tz(block.data.reschedules.last * 1000, timezone).format('DD/MM/YYYY'),
+                                  diff: moment
+                                      .tz(timezone)
+                                      .diff(moment.tz(block.data.reschedules.last * 1000, timezone), 'days'),
+                              }
+                            : undefined,
+                        tag_critical: block.data.tag_critical,
+                        tag_personal: block.data.tag_personal,
+                    })
+                }
+            }
+            return visibleBlocks
+        },
     },
 }
 </script>
