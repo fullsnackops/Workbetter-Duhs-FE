@@ -85,7 +85,7 @@ const actions = {
             context.commit('onImportCompleted', false)
             ustate('import', 0)
         }
-        router.push('/')
+        router.push({ name: 'home' })
     },
     async loadRecap(context, offset) {
         try {
