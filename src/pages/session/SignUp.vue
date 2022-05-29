@@ -47,7 +47,9 @@ export default {
     methods: {
         googleCallback() {
             this.$authenticator
-                .googleGrantOffline('profile https://www.googleapis.com/auth/calendar.readonly')
+                .googleGrantOffline(
+                    'profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'
+                )
                 .then(({ code }) => {
                     this.$store.dispatch('signupUser', code)
                     this.step = 2
@@ -69,8 +71,6 @@ export default {
     computed: {
         ...mapGetters({
             signupResult: 'signupResult',
-            importResult: 'importResult',
-            user: 'user',
         }),
     },
     watch: {
@@ -78,15 +78,8 @@ export default {
             if (res) {
                 this.step = 3
                 this.$store.dispatch('signUpCompleted')
-            } else this.step = 1
-        },
-        importResult(res) {
-            this.step = res ? 4 : 1
-        },
-        user(user) {
-            if (user) {
                 this.$store.dispatch('importEvents')
-            }
+            } else this.step = 1
         },
     },
 }
