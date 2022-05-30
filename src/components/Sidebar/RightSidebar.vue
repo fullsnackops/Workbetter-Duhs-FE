@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/lib/eventBus'
 import moment from 'moment-timezone'
 import EventDetails from '@/components/Sidebar/EventDetails'
 
@@ -126,6 +127,17 @@ export default {
             }
             return visibleBlocks
         },
+    },
+    mounted() {
+        const vm = this
+        EventBus.$on('clickEvent', payload => {
+            const { eventId } = payload
+            vm.toggle = true
+            vm.$refs.refDetails.scrollToSelectedEventWithAnimation(eventId)
+        })
+    },
+    beforeDestroy() {
+        EventBus.$off('clickEvent')
     },
 }
 </script>
