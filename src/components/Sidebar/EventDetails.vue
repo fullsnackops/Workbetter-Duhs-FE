@@ -76,3 +76,16 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+dt {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -2px;
+    z-index: 999;
+    padding-top: 3px;
+}
+.v-card__text {
+    padding: 10px;
+}
+</style>
