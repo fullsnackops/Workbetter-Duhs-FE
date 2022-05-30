@@ -1,13 +1,78 @@
 <template>
     <vue-perfect-scrollbar class="rightsidebar-scroll-area" id="details-scroll" :settings="settings">
         <div class="inner-toolbar">
-            <v-timeline dense clipped align-top class="pt-0"> </v-timeline>
+            <v-timeline dense clipped align-top class="pt-0">
+                <dl>
+                    <template v-for="(entry, index) in events">
+                        <dt :key="entry.dl" :id="`anchor-details-${index}`" class="mb-1">
+                            <v-timeline-item small class="pb-0" hide-dot>
+                                <h4 class="gradient-border">
+                                    <span>{{ entry.d1 }}</span>
+                                    <span>{{ entry.d2 }}</span>
+                                </h4>
+                            </v-timeline-item>
+                        </dt>
+                        <template v-for="block in entry.blocks">
+                            <dd :key="block.id" :id="`anchor-details-${block.id}`" class="mb-2">
+                                <v-timeline-item
+                                    small
+                                    fill-dot
+                                    :color="eventColor(block.category)"
+                                    class="pb-2"
+                                    v-if="block.category === 'meeting'"
+                                >
+                                    <v-card :color="eventColor(block.category)">
+                                        <v-card-title>
+                                            <event-card-title :appointment="block"></event-card-title>
+                                        </v-card-title>
+                                        <v-card-text class="white">
+                                            <event-details-card :appointment="block"></event-details-card>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-timeline-item>
+                                <v-timeline-item small fill-dot color="grey" :key="block.from" class="pb-2" v-else>
+                                    <v-card color="grey">
+                                        <v-card-title>
+                                            <event-card-title :appointment="block"></event-card-title>
+                                        </v-card-title>
+                                        <v-card-text class="white">
+                                            <v-icon small color="grey">
+                                                ti-na
+                                            </v-icon>
+                                            <span class="grey--text font-sm ml-2">
+                                                Not Attending.
+                                            </span>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-timeline-item>
+                            </dd>
+                        </template>
+                    </template>
+                </dl>
+            </v-timeline>
         </div>
     </vue-perfect-scrollbar>
 </template>
 
 <script>
+import EventCardTitle from '@/components/Sidebar/EventCardTitle'
+import EventDetailsCard from '@/components/Sidebar/EventDetailsCard'
+
 export default {
     props: ['events', 'settings'],
+    components: {
+        EventCardTitle,
+        EventDetailsCard,
+    },
+    methods: {
+        eventColor(category) {
+            if (category === 'meeting') {
+                return 'rgba(93, 200, 224, 0.75)'
+            }
+            if (category === 'tentative') {
+                return 'grey'
+            }
+        },
+    },
 }
 </script>
