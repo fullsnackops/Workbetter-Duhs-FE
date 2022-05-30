@@ -39,6 +39,14 @@ export default {
         toggleSidebar() {
             this.toggle = !this.toggle
         },
+        scrollToEvent(eventId) {
+            if (eventId) {
+                if (!this.toggle) {
+                    this.toggle = true
+                }
+                this.$refs.refDetails.scrollToSelectedEventWithAnimation(eventId)
+            }
+        },
         getDayForScroll() {
             // const { timezone } = this.$store.getters.user
             const timezone = 'America/Chicaco'
