@@ -1,7 +1,6 @@
 <template>
     <v-layout row>
-        <v-flex xs11>
-        </v-flex>
+        <v-flex xs11> </v-flex>
     </v-layout>
 </template>
 
