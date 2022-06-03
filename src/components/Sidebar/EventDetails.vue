@@ -74,6 +74,18 @@ export default {
                 return 'grey'
             }
         },
+        scrollToSelectedDayWithAnimation(dayForScroll) {
+            this.$nextTick(() => {
+                const scrollViewDetails = document.getElementById('details-scroll')
+                const eventElementDetails = document.getElementById(`anchor-details-${dayForScroll}`)
+                if (eventElementDetails) {
+                    this.$nextTick(() => {
+                        scrollViewDetails.scrollTop = 0
+                        scrollTo(scrollViewDetails, eventElementDetails.offsetTop + 25, 1000)
+                    })
+                }
+            })
+        },
     },
 }
 </script>
