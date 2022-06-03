@@ -57,6 +57,7 @@
 <script>
 import EventCardTitle from '@/components/Sidebar/EventCardTitle'
 import EventDetailsCard from '@/components/Sidebar/EventDetailsCard'
+import { scrollTo } from '@/helpers/helpers'
 
 export default {
     props: ['events', 'settings'],
