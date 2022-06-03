@@ -86,6 +86,18 @@ export default {
                 }
             })
         },
+        scrollToSelectedDay(dayForScroll) {
+            this.$nextTick(() => {
+                const scrollViewDetails = document.getElementById('details-scroll')
+                const eventElementDetails = document.getElementById(`anchor-details-${dayForScroll}`)
+                if (eventElementDetails) {
+                    this.$nextTick(() => {
+                        scrollViewDetails.scrollTop = 0
+                        scrollViewDetails.scrollTop = eventElementDetails.offsetTop + 25
+                    })
+                }
+            })
+        },
     },
 }
 </script>
