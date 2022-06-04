@@ -4,11 +4,20 @@
             <span class="white--text font-sm fw-bold">
                 {{ eventTitle }}
             </span>
+            <span class="white--text font-xs">
+                {{ appointment.time1 }}
+                -
+                {{ appointment.time2 }}
+                ({{ appointment.hours }}
+                hours)
+            </span>
+            <span class="white--text font-xs">Organizer: {{ organizer }}</span>
         </v-flex>
     </v-layout>
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
 import AppConfig from '@/constants/AppConfig'
 
 export default {
