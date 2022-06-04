@@ -85,6 +85,18 @@ export default {
                 }
             })
         },
+        scrollToSelectedEvent(eventId) {
+            this.$nextTick(() => {
+                const scrollViewDetails = document.getElementById('details-scroll')
+                const eventElementDetails = document.getElementById(`anchor-details-${eventId}`)
+                if (eventElementDetails) {
+                    this.$nextTick(() => {
+                        scrollViewDetails.scrollTop = 0
+                        scrollViewDetails.scrollTop = eventElementDetails.offsetTop - 40
+                    })
+                }
+            })
+        },
         scrollToSelectedDayWithAnimation(dayForScroll) {
             this.$nextTick(() => {
                 const scrollViewDetails = document.getElementById('details-scroll')
