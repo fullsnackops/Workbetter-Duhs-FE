@@ -31,6 +31,37 @@ export default {
 
             return this.appointment.title
         },
+        organizer() {
+            if (this.appointment.isOrganizer) {
+                return this.$store.getters.user.name
+            } else {
+                const { attendees } = this.appointment
+                if (!isEmpty(attendees)) {
+                    const attender = attendees.find(attendee => attendee.org === 1)
+                    if (!isEmpty(attender)) {
+                        if (attender.name) return attender.name
+                        const recapPeers =
+                            !isEmpty(this.$store.getters.recap) && !isEmpty(this.$store.getters.recap.attendees.peers)
+                                ? this.$store.getters.recap.attendees.peers
+                                : null
+                        const plannerPeers =
+                            !isEmpty(this.$store.getters.planner) &&
+                            !isEmpty(this.$store.getters.planner.attendees.peers)
+                                ? this.$store.getters.planner.attendees.peers
+                                : null
+                        const peers = recapPeers || plannerPeers
+                        if (peers) {
+                            const peerAttender = peers.find(attendee => attendee.email === attender.email)
+                            if (!isEmpty(peerAttender)) {
+                                return peerAttender.name
+                            }
+                        }
+                        if (attender.email) return attender.email
+                    }
+                }
+            }
+            return '-'
+        },
     },
 }
 </script>
