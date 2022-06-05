@@ -1,6 +1,9 @@
 <template>
-    <div>
-        Event Details Body
+    <div class="details-card">
+        <span class="font-xs ml-2">
+            <v-icon>fa fa-user{{ appointment.tag_critical ? 's' : '' }}</v-icon>
+            {{ appointment.tag_critical ? 'Workbetter-Duhs Critical Meeting' : 'Workbetter-Duhs Personal Meeting' }}
+        </span>
     </div>
 </template>
 
