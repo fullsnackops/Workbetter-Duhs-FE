@@ -54,13 +54,13 @@ const planner = {
         },
     },
     events: {
-        '2019-04-29': [
+        '2019-06-03': [
             {
                 id: '9b4f1517bceacb65806809f898ebbcff3abddc2e4b5afda320deddda344472b9',
                 rcr: 1,
                 type: 1,
-                start: 1556544600,
-                end: 1556546400,
+                start: 1559572200,
+                end: 1559574000,
                 created: 1537367905,
                 summary: 'workbetter:critical Standup (Daily)',
                 attendees: [
@@ -84,8 +84,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556557200,
-                end: 1556560800,
+                start: 1559584800,
+                end: 1559588400,
                 created: 1537304032,
                 summary: 'workbetter:personal Test Recurring Daily',
                 attendees: [
@@ -112,8 +112,8 @@ const planner = {
                 id: '79df7290da34e9a3ddf2372494bdbcde2a6698b5de507eff8726e39bdb97b9e7',
                 rcr: 1,
                 type: 1,
-                start: 1556560800,
-                end: 1556564400,
+                start: 1559588400,
+                end: 1559592000,
                 created: 1537368025,
                 summary: 'Weekly Staff Meeting',
                 attendees: [
@@ -143,13 +143,13 @@ const planner = {
                 recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=MO'],
             },
         ],
-        '2019-04-30': [
+        '2019-06-04': [
             {
                 id: '0d5fcb07635215229b81b45e681a87dfb5168661a46ea8c79d979d854e4f40b8',
                 rcr: 1,
                 type: 1,
-                start: 1556631000,
-                end: 1556632800,
+                start: 1559658600,
+                end: 1559660400,
                 created: 1537367905,
                 summary: 'workbetter:critical Standup (Daily)',
                 attendees: [
@@ -173,8 +173,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556643600,
-                end: 1556647200,
+                start: 1559671200,
+                end: 1559674800,
                 created: 1537304032,
                 summary: 'workbetter:personal Test Recurring Daily',
                 attendees: [
@@ -202,8 +202,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556650800,
-                end: 1556659800,
+                start: 1559678400,
+                end: 1559687400,
                 created: 1537368482,
                 summary: "Test User 1's Weekly ",
                 attendees: [
@@ -222,13 +222,13 @@ const planner = {
                 recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=TU'],
             },
         ],
-        '2019-05-01': [
+        '2019-06-05': [
             {
                 id: '9da2479136c7b61c0b31ab8b05e09665e4afb1640e84a2d43e32a8a2d5fbe6df',
                 rcr: 1,
                 type: 1,
-                start: 1556717400,
-                end: 1556719200,
+                start: 1559745000,
+                end: 1559746800,
                 created: 1537367905,
                 summary: 'workbetter:critical Standup (Daily)',
                 attendees: [
@@ -251,8 +251,8 @@ const planner = {
                 id: '05c0b74be15f2cd19edbc78e1307ca439216dd1e21dd09d4eca43a257f533835',
                 rcr: 1,
                 type: 1,
-                start: 1556721000,
-                end: 1556737200,
+                start: 1559748600,
+                end: 1559764800,
                 created: 1537368176,
                 summary: 'Weekly Synergy Coordination',
                 attendees: [
@@ -276,8 +276,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556722800,
-                end: 1556730000,
+                start: 1559750400,
+                end: 1559757600,
                 created: 1535492187,
                 summary: 'test recurring 1',
                 attendees: [
@@ -300,8 +300,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556730000,
-                end: 1556733600,
+                start: 1559757600,
+                end: 1559761200,
                 created: 1537304032,
                 summary: 'workbetter:personal Test Recurring Daily',
                 attendees: [
@@ -325,13 +325,13 @@ const planner = {
                 recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'],
             },
         ],
-        '2019-05-02': [
+        '2019-06-06': [
             {
                 id: 'd68d3252ab874e30ff99ee32104c6e8763653d548009c182d8a9ed6076d9c2f6',
                 rcr: 1,
                 type: 1,
-                start: 1556803800,
-                end: 1556805600,
+                start: 1559831400,
+                end: 1559833200,
                 created: 1537367905,
                 summary: 'workbetter:critical Standup (Daily)',
                 attendees: [
@@ -355,8 +355,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 10,
-                start: 1556809200,
-                end: 1556812800,
+                start: 1559836800,
+                end: 1559840400,
                 created: 1530302822,
                 summary: 'Test Recurring Meeting - Weekly',
                 attendees: [
@@ -372,8 +372,8 @@ const planner = {
                 id: '0af746f671376caefef402b050c6f3092f43e676ee364fce82a12b0f77c6cfc6',
                 rcr: 1,
                 type: 1,
-                start: 1556812800,
-                end: 1556815800,
+                start: 1559840400,
+                end: 1559843400,
                 created: 1536587014,
                 summary: 'Test Recurring 5',
                 attendees: [
@@ -396,8 +396,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556816400,
-                end: 1556820000,
+                start: 1559844000,
+                end: 1559847600,
                 created: 1537304032,
                 summary: 'workbetter:personal Test Recurring Daily',
                 attendees: [
@@ -424,8 +424,8 @@ const planner = {
                 id: '00721020c431d4a20603346dc604982609d6856a3b77ea43983839957154d7aa',
                 rcr: 1,
                 type: 10,
-                start: 1556816400,
-                end: 1556818200,
+                start: 1559844000,
+                end: 1559845800,
                 created: 1546877926,
                 summary: 'Weekly Check-in with Team',
                 attendees: [
@@ -453,8 +453,8 @@ const planner = {
                 id: '69c1fc5d5b1216ef78d0213ac72869cfe517f89b4b4eae0daf92b297f30cb3e1',
                 rcr: 1,
                 type: 1,
-                start: 1556823600,
-                end: 1556827200,
+                start: 1559851200,
+                end: 1559854800,
                 created: 1537369574,
                 summary: 'GTM Discussion',
                 attendees: [
@@ -474,13 +474,13 @@ const planner = {
                 recurrence: ['RRULE:FREQ=WEEKLY;BYDAY=TH'],
             },
         ],
-        '2019-05-03': [
+        '2019-06-07': [
             {
                 id: 'd8ce923172f7a824ca3c4b5eea3bfc23af181998c952599d38c8f2ecdab8e218',
                 rcr: 1,
                 type: 1,
-                start: 1556890200,
-                end: 1556892000,
+                start: 1559917800,
+                end: 1559919600,
                 created: 1537367905,
                 summary: 'workbetter:critical Standup (Daily)',
                 attendees: [
@@ -503,8 +503,8 @@ const planner = {
                 id: 'dce9295fb5f9f8b39f8b84fc9d9e0c5d310fd0239bf008503b5b8d0b8bf2a711',
                 rcr: 1,
                 type: 1,
-                start: 1556892000,
-                end: 1556895600,
+                start: 1559919600,
+                end: 1559923200,
                 created: 1537368083,
                 summary: 'Weekly Team Recap',
                 attendees: [
@@ -527,8 +527,8 @@ const planner = {
                 id: '67e8ec31a873b5c19d5e7f342902ab4f89dc85781aeb221996d015971aa0dd1b',
                 rcr: 1,
                 type: 1,
-                start: 1556899200,
-                end: 1556902200,
+                start: 1559926800,
+                end: 1559929800,
                 created: 1536587014,
                 summary: 'Test Recurring 5',
                 attendees: [
@@ -551,8 +551,8 @@ const planner = {
                 org: 1,
                 rcr: 1,
                 type: 1,
-                start: 1556902800,
-                end: 1556906400,
+                start: 1559930400,
+                end: 1559934000,
                 created: 1537304032,
                 summary: 'workbetter:personal Test Recurring Daily',
                 attendees: [
@@ -579,9 +579,9 @@ const planner = {
                 id: 'bb35caa846ee5ca9942c43b0d54ee681814c43424ade020fd14ae83a0e9d7290',
                 rcr: 1,
                 type: 1,
-                start: 1556908200,
-                end: 1556912700,
-                created: 1555696748,
+                start: 1559939400,
+                end: 1559940300,
+                created: 1559940300,
                 summary: 'Test Trying to Provide Suggestions',
                 attendees: [
                     {
