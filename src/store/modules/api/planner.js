@@ -580,7 +580,7 @@ const planner = {
                 rcr: 1,
                 type: 1,
                 start: 1559939400,
-                end: 1559940300,
+                end: 1559941200,
                 created: 1559940300,
                 summary: 'Test Trying to Provide Suggestions',
                 attendees: [
