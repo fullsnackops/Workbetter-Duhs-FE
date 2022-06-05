@@ -39,3 +39,15 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.details-card {
+    .v-icon {
+        font-size: 14px;
+        font-weight: $font-weight-bold;
+        color: $focus-color;
+        max-width: 10px;
+        margin-right: 3px;
+    }
+}
+</style>
