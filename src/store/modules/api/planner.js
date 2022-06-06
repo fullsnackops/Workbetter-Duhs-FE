@@ -203,7 +203,7 @@ const planner = {
                 rcr: 1,
                 type: 1,
                 start: 1559678400,
-                end: 1559687400,
+                end: 1559685600,
                 created: 1537368482,
                 summary: "Test User 1's Weekly ",
                 attendees: [
