@@ -94,4 +94,7 @@ export default {
     lastSchedule: 'Last Schedule:',
     reschedules: 'Reschedules:',
     organizer: 'Organizer',
+    updateToPersonalTag: 'Update To Personal Tag',
+    updateToCriticalTag: 'Update To Critical Tag',
+    addTagToEvent: 'Add Tag To Event',
 }

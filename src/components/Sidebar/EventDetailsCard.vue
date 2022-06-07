@@ -88,10 +88,10 @@
                         <v-btn class="meetinig-btn d-block white--text" block depressed @click="alert()">
                             <v-icon color="white" left class="ml-4 mr-2">fa fa-edit</v-icon>
                             <template v-if="appointment.tag_critical">
-                                Update To Personal Tag
+                                {{ $t('message.updateToPersonalTag') }}
                             </template>
                             <template v-if="appointment.tag_personal">
-                                Update To Critical Tag
+                                {{ $t('message.updateToCriticalTag') }}
                             </template>
                         </v-btn>
                     </v-flex>
@@ -100,7 +100,7 @@
                     <v-flex mx-2>
                         <v-btn class="meetinig-btn d-block white--text" block depressed @click="alert()">
                             <v-icon color="white" left class="ml-4 mr-2">fa fa-plus</v-icon>
-                            Add Tag To Event
+                            {{ $t('message.addTagToEvent') }}
                         </v-btn>
                     </v-flex>
                 </template>
