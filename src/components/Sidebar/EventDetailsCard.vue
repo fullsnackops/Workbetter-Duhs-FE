@@ -96,6 +96,14 @@
                         </v-btn>
                     </v-flex>
                 </template>
+                <template v-else>
+                    <v-flex mx-2>
+                        <v-btn class="meetinig-btn d-block white--text" block depressed @click="alert()">
+                            <v-icon color="white" left class="ml-4 mr-2">fa fa-plus</v-icon>
+                            Add Tag To Event
+                        </v-btn>
+                    </v-flex>
+                </template>
             </div>
             <v-list class="pa-2">
                 <v-list-tile>
