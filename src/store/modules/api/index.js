@@ -14,7 +14,7 @@ import { planner } from './planner'
 function getFreshState() {
     return {
         importResult: null,
-        recap: recap,
+        recap: {},
         planner: {},
         calculatedBlocks: {},
         settings: {
@@ -89,13 +89,36 @@ const actions = {
     },
     async loadRecap(context, offset) {
         try {
-            // call get recap api for offset ${offset}
-            // once fetched recap data, call mutation
-            setTimeout(() => {
-                Nprogress.start()
-            }, 1500)
+            if (cache.recap[offset]) {
+                context.commit('recapLoaded', cache.recap[offset])
+                return
+            }
+
+            if (ustate(`recap.${offset}`)) {
+                return
+            }
+
+            context.commit('recapLoaded', {})
+
+            ustate(`recap.${offset}`, 1)
+            Nprogress.start()
+
+            // get recap dummy data from temp file
+            context.commit('recapLoaded', recap)
+            cache.recap[offset] = recap
+
+            // get recap real data from back-end
+            // const json = await get('/reports/recap', { offset })
+            // context.commit('recapLoaded', json)
+            // cache.recap[offset] = json
+
+            ustate(`recap.${offset}`, 2)
         } catch (e) {
-            // process error
+            ustate(`recap.${offset}`, 0)
+            VueNotifications.error({
+                message: e.message || e || e.errorMessage || 'Unexpected error',
+            })
+            console.error(e)
         }
         Nprogress.done()
     },
@@ -113,12 +136,17 @@ const actions = {
             context.commit('plannerLoaded', {})
 
             ustate(`planner.${offset}`, 1)
-
             Nprogress.start()
-            setTimeout(() => {}, 1500)
 
+            // get planner dummy data from temp file
             context.commit('plannerLoaded', planner)
             cache.planner[offset] = planner
+
+            // get planner real data from back-end
+            // const json = await get('/reports/planner', { offset })
+            // context.commit('plannerLoaded', json)
+            // cache.planner[offset] = json
+
             ustate(`planner.${offset}`, 2)
         } catch (e) {
             // process error
@@ -161,6 +189,9 @@ const actions = {
 const mutations = {
     onImportCompleted(state, result) {
         state.importResult = result
+    },
+    recapLoaded(state, json) {
+        state.recap = json
     },
     plannerLoaded(state, json) {
         state.planner = json
