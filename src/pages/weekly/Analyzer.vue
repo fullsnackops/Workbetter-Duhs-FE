@@ -83,13 +83,17 @@ export default {
         },
         meetingTrends() {
             const { trends } = this.$store.getters.recap
+            if (!trends) return { week: [], month: [], loading: null }
+
             const meetingTrends = { ...trends }
             if (meetingTrends) meetingTrends.loading = { loaded: true }
             return meetingTrends || { week: [], month: [], loading: null }
         },
         meetingNetwork() {
             const { makeup, attendees } = this.$store.getters.recap
-            const { externalDomains = [] } = makeup
+            let externalDomains = []
+            if (makeup) externalDomains = makeup.externalDomains
+
             if (!attendees) {
                 return {
                     externalDomains,
