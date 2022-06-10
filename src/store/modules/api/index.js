@@ -6,9 +6,9 @@ import VueNotifications from 'vue-notifications'
 import { get } from '@/helpers/api'
 import router from '@/router'
 
-// Import recap dummy data
-import { recap } from './recap'
-// Import planner dummy data
+// recap dummy data
+// import { recap } from './recap'
+// planner dummy data
 import { planner } from './planner'
 
 function getFreshState() {
@@ -104,13 +104,13 @@ const actions = {
             Nprogress.start()
 
             // get recap dummy data from temp file
-            context.commit('recapLoaded', recap)
-            cache.recap[offset] = recap
+            // context.commit('recapLoaded', recap)
+            // cache.recap[offset] = recap
 
             // get recap real data from back-end
-            // const json = await get('/reports/recap', { offset })
-            // context.commit('recapLoaded', json)
-            // cache.recap[offset] = json
+            const json = await get('/reports/recap', { offset })
+            context.commit('recapLoaded', json)
+            cache.recap[offset] = json
 
             ustate(`recap.${offset}`, 2)
         } catch (e) {
