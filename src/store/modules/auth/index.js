@@ -107,7 +107,6 @@ const mutations = {
             )
         }
         Nprogress.doneAll()
-        router.push(router.currentRoute.query.redirect || '/')
     },
     onSignupCompleted(state, res) {
         state.signupResult = res
