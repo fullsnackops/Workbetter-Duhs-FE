@@ -37,9 +37,11 @@ export default {
         }
     },
     methods: {
-        googleCallback() {
+        async googleCallback() {
             this.$store.commit('onLoginError', null)
-            this.$authenticator.googleSignIn()
+            await this.$authenticator.googleSignIn()
+            const route = this.$router.currentRoute.query.redirect || '/'
+            this.$router.push(route)
         },
     },
     computed: {
