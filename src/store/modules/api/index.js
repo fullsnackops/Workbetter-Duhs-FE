@@ -108,9 +108,9 @@ const actions = {
             // cache.recap[offset] = recap
 
             // get recap real data from back-end
-            const json = await get('/reports/recap', { offset })
-            context.commit('recapLoaded', json)
-            cache.recap[offset] = json
+            const { recap } = await get('/reports/recap', { offset })
+            context.commit('recapLoaded', recap)
+            cache.recap[offset] = recap
 
             ustate(`recap.${offset}`, 2)
         } catch (e) {
@@ -143,9 +143,9 @@ const actions = {
             cache.planner[offset] = planner
 
             // get planner real data from back-end
-            // const json = await get('/reports/planner', { offset })
-            // context.commit('plannerLoaded', json)
-            // cache.planner[offset] = json
+            // const { planner } = await get('/reports/planner', { offset })
+            // context.commit('plannerLoaded', planner)
+            // cache.planner[offset] = planner
 
             ustate(`planner.${offset}`, 2)
         } catch (e) {
@@ -190,11 +190,11 @@ const mutations = {
     onImportCompleted(state, result) {
         state.importResult = result
     },
-    recapLoaded(state, json) {
-        state.recap = json
+    recapLoaded(state, recap) {
+        state.recap = recap
     },
-    plannerLoaded(state, json) {
-        state.planner = json
+    plannerLoaded(state, planner) {
+        state.planner = planner
     },
     logoutUser(state) {
         const fresh = getFreshState()
