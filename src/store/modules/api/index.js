@@ -9,7 +9,7 @@ import router from '@/router'
 // recap dummy data
 // import { recap } from './recap'
 // planner dummy data
-import { planner } from './planner'
+// import { planner } from './planner'
 
 function getFreshState() {
     return {
@@ -87,7 +87,7 @@ const actions = {
         }
         router.push({ name: 'home' })
     },
-    async loadRecap(context, offset) {
+    async loadWAnalyzer(context, offset) {
         try {
             if (cache.recap[offset]) {
                 context.commit('recapLoaded', cache.recap[offset])
@@ -139,13 +139,13 @@ const actions = {
             Nprogress.start()
 
             // get planner dummy data from temp file
-            context.commit('plannerLoaded', planner)
-            cache.planner[offset] = planner
-
-            // get planner real data from back-end
-            // const { planner } = await get('/reports/planner', { offset })
             // context.commit('plannerLoaded', planner)
             // cache.planner[offset] = planner
+
+            // get planner real data from back-end
+            const { planner } = await get('/reports/planner', { offset })
+            context.commit('plannerLoaded', planner)
+            cache.planner[offset] = planner
 
             ustate(`planner.${offset}`, 2)
         } catch (e) {
