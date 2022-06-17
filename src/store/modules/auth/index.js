@@ -9,7 +9,7 @@ import { subscribe, signOut, signUp } from '@/helpers/authenticator'
 
 const state = {
     user: JSON.parse(localStorage.getItem('userId')),
-    token: null,
+    token: JSON.parse(localStorage.getItem('token')).accessToken,
     signupResult: null,
     writeAccessRequired: false,
     loginError: null,
@@ -96,6 +96,7 @@ const mutations = {
         state.token = session.token.accessToken
         state.user = session.user
         localStorage.setItem('userId', JSON.stringify(state.user))
+        localStorage.setItem('token', JSON.stringify(session.token))
         const { IntercomPromise } = window
         if (IntercomPromise) {
             IntercomPromise.then(() =>
