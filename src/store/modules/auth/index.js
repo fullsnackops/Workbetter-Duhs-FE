@@ -9,7 +9,7 @@ import { subscribe, signOut, signUp } from '@/helpers/authenticator'
 
 const state = {
     user: JSON.parse(localStorage.getItem('userId')),
-    token: JSON.parse(localStorage.getItem('token')).accessToken,
+    token: JSON.parse(localStorage.getItem('token')) ? JSON.parse(localStorage.getItem('token')).accessToken : null,
     signupResult: null,
     writeAccessRequired: false,
     loginError: null,
