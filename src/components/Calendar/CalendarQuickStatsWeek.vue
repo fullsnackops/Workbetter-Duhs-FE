@@ -13,7 +13,7 @@
                                     <i
                                         class="zmdi font-sm"
                                         :class="{
-                                            'zmdi-long-arrow-up success--text': computedStats.comp.total_meetings > 0,
+                                            'zmdi-long-arrow-up error--text': computedStats.comp.total_meetings > 0,
                                             'zmdi-long-arrow-down error--text': computedStats.comp.total_meetings < 0,
                                             'd-none': computedStats.comp.total_meetings.percentage === 0,
                                         }"
@@ -32,7 +32,7 @@
                                     <i
                                         class="zmdi font-sm"
                                         :class="{
-                                            'zmdi-long-arrow-up success--text': computedStats.comp.meeting_hours > 0,
+                                            'zmdi-long-arrow-up error--text': computedStats.comp.meeting_hours > 0,
                                             'zmdi-long-arrow-down error--text': computedStats.comp.meeting_hours < 0,
                                             'd-none': computedStats.comp.meeting_hours.percentage === 0,
                                         }"
