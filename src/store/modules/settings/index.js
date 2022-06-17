@@ -138,7 +138,7 @@ const actions = {
         if (!parseInt(change)) return
         const offset = context.state.wanalyzerOffset + parseInt(change)
         context.commit('wanalyzerOffset', offset)
-        // context.dispatch('loadWAnalyzer', offset)
+        context.dispatch('loadWAnalyzer', offset)
     },
     changeWPlannerOffset(context, change) {
         if (!parseInt(change)) return
