@@ -34,11 +34,13 @@ async function workbetterduhsSignIn() {
             notify(e)
         }
         notify(null, { user, token })
+        return user
     } catch (e) {
         if (e && (e === 'Incorrect email or password' || e === 'UserNotFoundException')) {
             await gapi.auth2.getAuthInstance().signOut()
         }
         notify(e)
+        return
     }
 }
 
