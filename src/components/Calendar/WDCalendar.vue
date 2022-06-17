@@ -65,8 +65,8 @@ export default {
             get() {
                 let options = this.default_options
                 let providedProps = this.configuration
-                // const { timezone } = this.$store.getters.user
-                const timezone = 'America/Chicago'
+                const { timezone } = this.$store.getters.user
+                // const timezone = 'America/Chicago'
                 const today = moment.tz(timezone)
                 if (today.day() > 5 || (today.day() === 5 && today.hours() > 11)) {
                     today.add(1, 'week').startOf('week')
@@ -108,8 +108,8 @@ export default {
     },
     methods: {
         constructWeek() {
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicago'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicago'
             const utcOffset = new Date().getTimezoneOffset()
             timezoneOffset = (moment.tz(timezone).zone() - utcOffset) * 60 * 1000
             slotStep = this.calendar_options.split_value * 60 * 1000

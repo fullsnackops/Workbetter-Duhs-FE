@@ -279,8 +279,8 @@ export default {
             return '-'
         },
         normalizeTime(date) {
-            // const timezone = this.$store.getters.user.timezone
-            const timezone = 'America/Chicago'
+            const timezone = this.$store.getters.user.timezone
+            // const timezone = 'America/Chicago'
             if (date) {
                 return moment.tz(date, timezone).format('h:mm A')
             }

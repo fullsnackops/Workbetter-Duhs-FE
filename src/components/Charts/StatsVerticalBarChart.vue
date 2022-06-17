@@ -43,8 +43,8 @@ export default {
         },
         trends_week: function() {
             if (!this.$store.getters.user) return []
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicago'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicago'
             const trends = this.stats.reduce((acc, cur) => {
                 const d = moment
                     .tz(timezone)
@@ -67,8 +67,8 @@ export default {
         },
         trends_month: function() {
             if (!this.$store.getters.user) return []
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicago'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicago'
             const trends = (this.stats || []).reduce((acc, cur) => {
                 const d = moment
                     .tz(timezone)

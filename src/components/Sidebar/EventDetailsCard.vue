@@ -170,8 +170,8 @@ export default {
     methods: {
         calcDiffMinsFromEvent() {
             if (this.diffMinsFromEventStart <= 0) return
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicago'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicago'
             this.diffMinsFromEventStart = differenceInMinutes(moment(this.appointment.from), moment.tz(timezone))
         },
         alert() {

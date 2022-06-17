@@ -34,8 +34,8 @@ export default {
             let res = []
 
             for (const date of Object.keys(events)) {
-                // const timezone = this.$store.getters.user.timezone
-                const timezone = 'America/Chicago'
+                const timezone = this.$store.getters.user.timezone
+                // const timezone = 'America/Chicago'
                 const mdate = moment.tz(date, 'YYYY-MM-DD', timezone)
 
                 const agg = new Blocks(mdate)

@@ -48,8 +48,8 @@ export default {
             }
         },
         getDayForScroll() {
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicaco'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicaco'
             const today = moment.tz(timezone).format('YYYY-MM-DD')
 
             let dayForScroll = ''
@@ -92,8 +92,8 @@ export default {
         events() {
             const blocks = this.$store.getters.calculatedBlocks
             const visibleBlocks = {}
-            // const { timezone } = this.$store.getters.user
-            const timezone = 'America/Chicago'
+            const { timezone } = this.$store.getters.user
+            // const timezone = 'America/Chicago'
             for (const date of Object.keys(blocks)) {
                 const md = moment.tz(date, 'YYYY-MM-DD', timezone)
                 for (const block of blocks[date]) {
