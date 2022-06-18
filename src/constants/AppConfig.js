@@ -12,8 +12,8 @@ export default {
     copyrightText: 'Workbetter-Duhs © 2019 All Rights Reserved.', // Copyright Text
     enableUserTour: process.env.NODE_ENV === 'production', // Enable User Tour
     meetingTag: {
-        critical: 'workbetter:critical',
-        personal: 'workbetter:personal',
+        critical: 'workbetter:critical:',
+        personal: 'workbetter:personal:',
     },
     ...dev,
 }
