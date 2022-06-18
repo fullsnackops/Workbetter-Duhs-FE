@@ -62,7 +62,7 @@ const planner = {
                 start: 1559572200,
                 end: 1559574000,
                 created: 1537367905,
-                summary: 'workbetter:critical Standup (Daily)',
+                summary: 'workbetter:critical: Standup (Daily)',
                 attendees: [
                     {
                         email: 'testuser2@workbetter.inc',
@@ -87,7 +87,7 @@ const planner = {
                 start: 1559584800,
                 end: 1559588400,
                 created: 1537304032,
-                summary: 'workbetter:personal Test Recurring Daily',
+                summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
                         email: 'testuser1@workbetter.inc',
@@ -151,7 +151,7 @@ const planner = {
                 start: 1559658600,
                 end: 1559660400,
                 created: 1537367905,
-                summary: 'workbetter:critical Standup (Daily)',
+                summary: 'workbetter:critical: Standup (Daily)',
                 attendees: [
                     {
                         email: 'testuser2@workbetter.inc',
@@ -176,7 +176,7 @@ const planner = {
                 start: 1559671200,
                 end: 1559674800,
                 created: 1537304032,
-                summary: 'workbetter:personal Test Recurring Daily',
+                summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
                         email: 'hussnain3119137@gmail.com',
@@ -230,7 +230,7 @@ const planner = {
                 start: 1559745000,
                 end: 1559746800,
                 created: 1537367905,
-                summary: 'workbetter:critical Standup (Daily)',
+                summary: 'workbetter:critical: Standup (Daily)',
                 attendees: [
                     {
                         email: 'testuser2@workbetter.inc',
@@ -303,7 +303,7 @@ const planner = {
                 start: 1559757600,
                 end: 1559761200,
                 created: 1537304032,
-                summary: 'workbetter:personal Test Recurring Daily',
+                summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
                         email: 'hussnain3119137@gmail.com',
@@ -333,7 +333,7 @@ const planner = {
                 start: 1559831400,
                 end: 1559833200,
                 created: 1537367905,
-                summary: 'workbetter:critical Standup (Daily)',
+                summary: 'workbetter:critical: Standup (Daily)',
                 attendees: [
                     {
                         email: 'testuser1@workbetter.inc',
@@ -399,7 +399,7 @@ const planner = {
                 start: 1559844000,
                 end: 1559847600,
                 created: 1537304032,
-                summary: 'workbetter:personal Test Recurring Daily',
+                summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
                         email: 'hussnain3119137@gmail.com',
@@ -482,7 +482,7 @@ const planner = {
                 start: 1559917800,
                 end: 1559919600,
                 created: 1537367905,
-                summary: 'workbetter:critical Standup (Daily)',
+                summary: 'workbetter:critical: Standup (Daily)',
                 attendees: [
                     {
                         email: 'testuser2@workbetter.inc',
@@ -554,7 +554,7 @@ const planner = {
                 start: 1559930400,
                 end: 1559934000,
                 created: 1537304032,
-                summary: 'workbetter:personal Test Recurring Daily',
+                summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
                         email: 'testuser1@workbetter.inc',
