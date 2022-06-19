@@ -3,7 +3,7 @@
  */
 import Nprogress from 'nprogress'
 import VueNotifications from 'vue-notifications'
-import { get } from '@/helpers/api'
+import { get, post } from '@/helpers/api'
 import router from '@/router'
 
 // recap dummy data
@@ -160,27 +160,40 @@ const actions = {
     },
     async getSettings(context) {
         try {
-            // call get user settings api
-            // once fetched settings data, call mutation
-            setTimeout(() => {
-                Nprogress.start()
-            }, 1500)
+            if (ustate('settings')) {
+                return
+            }
+
+            ustate('settings', 1)
+            Nprogress.start()
+            const res = await get('/reports/settings')
+            context.commit('settingsLoaded', res)
         } catch (e) {
-            // process error
+            VueNotifications.error({
+                message: e.message || e || 'Unexpected error',
+            })
+            console.error(e)
         }
+        ustate('settings', 0)
         Nprogress.done()
     },
     async setSettings(context, settings) {
         try {
-            // call set user settings api
-            // once saved settings data, call mutation
-            setTimeout(() => {
-                Nprogress.start()
-            }, 1500)
+            if (ustate('settings2')) {
+                return
+            }
+
+            ustate('settings2', 1)
+            Nprogress.start()
+            await post('/reports/settings', settings)
             context.commit('settingsLoaded', settings)
         } catch (e) {
-            // process error
+            VueNotifications.error({
+                message: e.message || e || e.errorMessage || 'Unexpected error',
+            })
+            console.error(e)
         }
+        ustate('settings2', 0)
         Nprogress.done()
     },
 }
