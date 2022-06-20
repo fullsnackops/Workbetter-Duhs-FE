@@ -75,9 +75,10 @@ export default {
 
     // Meeting Network
     meetingNetwork: 'Meeting Network',
-    peopleYouMetLastWeek: 'People You Met With',
-    peopleYouAreMeetingThisWeek: 'People You Are Meeting With',
+    peopleYouMetWith: 'People You Met With',
+    peopleYouAreMeetingWith: 'People You Are Meeting With',
     companiesYouMeetWith: 'Companies You Met With',
+    companiesYouAreMeetingWith: 'Companies You Are Meeting With',
 
     // Meeting Calendar
     meetingTimeCalendar: 'Meeting Time Calendar',
