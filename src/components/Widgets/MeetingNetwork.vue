@@ -8,7 +8,7 @@
                     <skeleton-list :data="stats.loading" :repeat="10" :enable-animation="true">
                         <v-flex xs12 py-0>
                             <span xs12 py-0 class="chart-title">
-                                {{ $t(meetingNetworkStatsTitle) }}
+                                {{ $t(meetingNetworkPeopleTitle) }}
                             </span>
                         </v-flex>
                         <meeting-network-map :period="period" :stats="stats.attendees"></meeting-network-map>
@@ -20,7 +20,7 @@
                     <skeleton-list :data="stats.loading" :repeat="10" :enable-animation="true">
                         <v-flex xs12 py-0>
                             <span class="chart-title">
-                                {{ $t('message.companiesYouMeetWith') }}
+                                {{ $t(meetingNetworkCompaniesTitle) }}
                             </span>
                         </v-flex>
                         <stats-horizontal-bar-chart :stats="externalOrganizations"></stats-horizontal-bar-chart>
@@ -61,12 +61,21 @@ export default {
                 ['desc']
             )
         },
-        meetingNetworkStatsTitle() {
+        meetingNetworkPeopleTitle() {
             let title = ''
             if (this.period === 'Week') {
-                title = 'message.peopleYouMetLastWeek'
+                title = 'message.peopleYouMetWith'
             } else if (this.period === 'WeekAhead') {
-                title = 'message.peopleYouAreMeetingThisWeek'
+                title = 'message.peopleYouAreMeetingWith'
+            }
+            return title
+        },
+        meetingNetworkCompaniesTitle() {
+            let title = ''
+            if (this.period === 'Week') {
+                title = 'message.companiesYouMeetWith'
+            } else if (this.period === 'WeekAhead') {
+                title = 'message.companiesYouAreMeetingWith'
             }
             return title
         },
