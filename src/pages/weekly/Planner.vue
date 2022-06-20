@@ -1,23 +1,31 @@
 <template>
     <v-container fluid grid-list-xl>
         <v-layout row wrap border-rad-sm overflow-hidden>
+            <!-- Week Look Ahead View -->
             <app-card :heading="$t('message.meetingTimeCalendar')" colClasses="xs12" :fullScreen="true">
                 <week-look-ahead-view :events="events"></week-look-ahead-view>
+            </app-card>
+
+            <!-- Meeting Network -->
+            <app-card :heading="$t('message.meetingNetwork')" colClasses="xs12">
+                <meeting-network period="WeekAhead" :stats="meetingNetwork"></meeting-network>
             </app-card>
         </v-layout>
     </v-container>
 </template>
 
 <script>
-import WeekLookAheadView from '@/components/Widgets/WeekLookAheadView'
 import moment from 'moment-timezone'
 import Blocks from '@/components/Calendar/Blocks'
 import orderBy from 'lodash/orderBy'
+import WeekLookAheadView from '@/components/Widgets/WeekLookAheadView'
+import MeetingNetwork from '@/components/Widgets/MeetingNetwork'
 
 export default {
     name: 'WeeklyPlanner',
     components: {
         WeekLookAheadView,
+        MeetingNetwork,
     },
     mounted: function() {
         this.$store.dispatch('loadWPlanner', 0)
@@ -55,6 +63,24 @@ export default {
             this.$store.commit('calculatedBlocks', blocks)
 
             return res
+        },
+        meetingNetwork() {
+            const { makeup, attendees } = this.$store.getters.planner
+            let externalDomains = []
+            if (makeup) externalDomains = makeup.externalDomains
+
+            if (!attendees) {
+                return {
+                    externalDomains,
+                    attendees: { peers: [], sharedMap: {} },
+                    loading: null,
+                }
+            }
+            return {
+                externalDomains,
+                attendees,
+                loading: { loaded: true },
+            }
         },
     },
     methods: {
