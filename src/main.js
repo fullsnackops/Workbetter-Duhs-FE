@@ -45,8 +45,8 @@ Object.defineProperty(Vue.prototype, '$authenticator', { value: authenticator })
 // navigation guards before each
 router.beforeEach(async (to, from, next) => {
     Nprogress.start()
-    // const loginRes = await authenticator.isLoggedIn()
-    const loginRes = store.getters.user
+    const loginRes = await authenticator.isLoggedIn()
+    // const loginRes = store.getters.user
     if (to.matched.some(record => record.meta.requiresAuth) && !loginRes) {
         // this route requires auth, check if logged in
         // if not, redirect to login page.
