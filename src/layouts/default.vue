@@ -45,8 +45,8 @@ export default {
     computed: {
         ...mapGetters(['darkMode', 'collapseSidebar', 'boxLayout', 'rtlLayout', 'selectedRouterAnimation', 'user']),
         showRightSidebar() {
-            if (this.$breadcrumbs[0]) {
-                return this.$breadcrumbs[0].meta.type === 'wplanner'
+            if (this.$route.meta) {
+                return this.$route.meta.type === 'wplanner' && !this.$route.meta.hideRightSidebar
             }
             return undefined
         },
