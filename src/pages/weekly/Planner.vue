@@ -28,7 +28,7 @@ export default {
         MeetingNetwork,
     },
     mounted: function() {
-        this.$store.dispatch('loadWPlanner', 0)
+        this.$store.dispatch('loadWPlanner', this.$store.getters.wplannerOffset)
         this.$store.dispatch('viewDashboard', {
             dashboard: 'Weekly Planner',
             dateRange: this.currentWeek(),

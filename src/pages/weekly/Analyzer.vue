@@ -58,7 +58,7 @@ export default {
         }
     },
     mounted: async function() {
-        this.$store.dispatch('loadWAnalyzer', -1)
+        this.$store.dispatch('loadWAnalyzer', this.$store.getters.wanalyzerOffset)
         this.$store.dispatch('viewDashboard', {
             dashboard: 'Weekly Recap',
             dateRange: this.currentWeek(),
