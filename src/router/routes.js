@@ -9,6 +9,9 @@ const WeeklyPlanner = () => import('@/pages/weekly/Planner')
 // Monthly Components
 const MonthlyAnalyzer = () => import('@/pages/monthly/Analyzer')
 
+// Dashboard Component
+const Dashboard = () => import('@/pages/Dashboard')
+
 // Other
 const NotFound = () => import('@/pages/NotFound')
 
@@ -16,7 +19,7 @@ export default [
     {
         path: '/',
         name: 'home',
-        redirect: '/weekly/analyzer',
+        redirect: '/dashboard',
     },
 
     // Session
@@ -48,6 +51,7 @@ export default [
         component: WeeklyAnalyzer,
         meta: {
             requiresAuth: true,
+            hideRightSidebar: false,
             title: 'message.weeklyAnalyzer',
             page: 'weekly-analyzer',
             type: 'wanalyzer',
@@ -80,6 +84,23 @@ export default [
             page: 'monthly-analyzer',
             type: 'manalyzer',
             breadcrumb: 'M Dashboards / Monthly Analyzer',
+            layout: 'default',
+        },
+    },
+
+    // Dashboard
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        alias: ['/'],
+        component: Dashboard,
+        meta: {
+            requiresAuth: true,
+            hideRightSidebar: true,
+            title: 'message.dashboard',
+            page: 'dashboard',
+            type: 'wplanner',
+            breadcrumb: 'Your Dashboards / Home',
             layout: 'default',
         },
     },
