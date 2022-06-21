@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import pluralize from 'pluralize'
 
 Vue.filter('titleCase', function(value) {
     if (value === undefined || value === null) {
@@ -25,4 +26,9 @@ Vue.filter('titleCase', function(value) {
 
         return match.charAt(0).toUpperCase() + match.substr(1)
     })
+})
+
+Vue.filter('pluralize', function(count, string, showCount = true) {
+    if (!count) return `No ${string}`
+    return pluralize(string, count, showCount)
 })
