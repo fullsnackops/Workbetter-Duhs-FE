@@ -1,6 +1,7 @@
 // messages.js
 export default {
     // General
+    dashboard: 'Dashboard',
     pages: 'Pages',
     search: 'Search',
     fullScreen: 'Full Screen',
