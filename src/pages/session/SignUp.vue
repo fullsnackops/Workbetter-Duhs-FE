@@ -1,9 +1,6 @@
 <template>
     <div>
         <template v-if="step === 1">
-            <v-flex xs12 sm6 offset-sm3>
-                <img :src="appLogo" class="img-responsive mb-3" />
-            </v-flex>
             <h2 class="my-3">{{ $t('message.signupToDashboard') }}</h2>
             <social-buttons v-bind="{ googleCallback }" />
             <p class="fs-14 my-3">
@@ -30,7 +27,6 @@
 
 <script>
 import SocialButtons from '@/components/SocialButtons'
-import AppConfig from '@/constants/AppConfig'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -40,7 +36,6 @@ export default {
     data() {
         return {
             valid: false,
-            appLogo: AppConfig.appLogo2,
             step: 1,
         }
     },

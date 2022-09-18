@@ -1,8 +1,5 @@
 <template>
     <div>
-        <v-flex xs12 sm6 offset-sm3>
-            <img :src="appLogo" class="img-responsive mb-3" />
-        </v-flex>
         <h3 class="my-3">{{ $t('message.loginToDashboard') }}</h3>
         <social-buttons v-bind="{ googleCallback }" />
         <p class="fs-14 my-3">
@@ -32,7 +29,6 @@ export default {
     },
     data() {
         return {
-            appLogo: AppConfig.appLogo2,
             brand: AppConfig.brand,
         }
     },
