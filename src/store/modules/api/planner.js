@@ -32,8 +32,8 @@ const planner = {
     attendees: {
         peers: [
             {
-                email: 'david@ulevitch.com',
-                name: 'David Ulevitch',
+                email: 'wduser@workbetter.inc',
+                name: 'WD User',
                 picture: '',
             },
             {
@@ -43,7 +43,7 @@ const planner = {
             },
         ],
         sharedMap: {
-            'david@ulevitch.com': {
+            'wduser@workbetter.inc': {
                 duration: 360,
                 meetings: 6,
             },
@@ -96,13 +96,13 @@ const planner = {
                         org: 1,
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: 'b6290a90a94b8ee378e1bd8499fdf15edf1cf932bde1af59ad452cb31f3b002a',
                     },
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                 ],
@@ -118,13 +118,13 @@ const planner = {
                 summary: 'Weekly Staff Meeting',
                 attendees: [
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: '3734df00023f8f934577bdef07ecb1ed0a96757e10c3676f921383654a102222',
                     },
                     {
@@ -179,13 +179,13 @@ const planner = {
                 summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: 'b6290a90a94b8ee378e1bd8499fdf15edf1cf932bde1af59ad452cb31f3b002a',
                     },
                     {
@@ -288,7 +288,7 @@ const planner = {
                         org: 1,
                     },
                     {
-                        email: 'david@ulevitch.com',
+                        email: 'wduser@workbetter.inc',
                         name: null,
                         id: '3734df00023f8f934577bdef07ecb1ed0a96757e10c3676f921383654a102222',
                     },
@@ -306,13 +306,13 @@ const planner = {
                 summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: 'b6290a90a94b8ee378e1bd8499fdf15edf1cf932bde1af59ad452cb31f3b002a',
                     },
                     {
@@ -383,8 +383,8 @@ const planner = {
                         id: '7ba009dcf2e4620b58fd1413d11c803555bf8d307d66125193ecb3507897a6f2',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: '3734df00023f8f934577bdef07ecb1ed0a96757e10c3676f921383654a102222',
                         org: 1,
                     },
@@ -402,13 +402,13 @@ const planner = {
                 summary: 'workbetter:personal: Test Recurring Daily',
                 attendees: [
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: 'b6290a90a94b8ee378e1bd8499fdf15edf1cf932bde1af59ad452cb31f3b002a',
                     },
                     {
@@ -538,7 +538,7 @@ const planner = {
                         id: '7ba009dcf2e4620b58fd1413d11c803555bf8d307d66125193ecb3507897a6f2',
                     },
                     {
-                        email: 'david@ulevitch.com',
+                        email: 'wduser@workbetter.inc',
                         name: null,
                         id: '3734df00023f8f934577bdef07ecb1ed0a96757e10c3676f921383654a102222',
                         org: 1,
@@ -563,13 +563,13 @@ const planner = {
                         org: 1,
                     },
                     {
-                        email: 'hussnain3119137@gmail.com',
-                        name: 'Hussnain Shabbir',
+                        email: 'goblin.daydream@gmail.com',
+                        name: 'Jimmy Chan',
                         id: 'fa712f8e56e8223db73b8dfcfe4b1a563a7a0cc9672bf2459e7d5c37c4f166cd',
                     },
                     {
-                        email: 'david@ulevitch.com',
-                        name: 'David Ulevitch',
+                        email: 'wduser@workbetter.inc',
+                        name: 'WD User',
                         id: 'b6290a90a94b8ee378e1bd8499fdf15edf1cf932bde1af59ad452cb31f3b002a',
                     },
                 ],

@@ -92,8 +92,8 @@ const recap = {
     attendees: {
         peers: [
             {
-                email: 'david@ulevitch.com',
-                name: 'David Ulevitch',
+                email: 'wduser@workbetter.inc',
+                name: 'WD User',
                 picture: '',
             },
             {
@@ -103,7 +103,7 @@ const recap = {
             },
         ],
         sharedMap: {
-            'david@ulevitch.com': {
+            'wduser@workbetter.inc': {
                 duration: 360,
                 meetings: 6,
             },
